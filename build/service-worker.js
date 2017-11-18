@@ -37,7 +37,7 @@
 /* eslint-disable indent, no-unused-vars, no-multiple-empty-lines, max-nested-callbacks, space-before-function-paren, quotes, comma-spacing */
 'use strict';
 
-var precacheConfig = [["/radAR/build/index.html","afd3154296f7f774b298c708076e4737"],["/radAR/build/static/css/main.fb1e4d3e.css","d7c81a64479393f0c9254b65d87f3e6b"],["/radAR/build/static/js/main.9e6144ed.js","361d4b49116e983324321a11b71f8726"]];
+var precacheConfig = [["/radAR/v4/build/index.html","5f6d8d3be1b61d4676e0753a73e5d290"],["/radAR/v4/build/static/css/main.fb1e4d3e.css","d7c81a64479393f0c9254b65d87f3e6b"],["/radAR/v4/build/static/js/main.936e3217.js","87e4a43aa9bb12280967049336e77453"]];
 var cacheName = 'sw-precache-v3-sw-precache-webpack-plugin-' + (self.registration ? self.registration.scope : '');
 
 
@@ -229,7 +229,7 @@ self.addEventListener('fetch', function(event) {
 
     // If shouldRespond is still false, check to see if this is a navigation
     // request, and if so, whether the URL matches navigateFallbackWhitelist.
-    var navigateFallback = '/radAR/build/index.html';
+    var navigateFallback = '/radAR/v4/build/index.html';
     if (!shouldRespond &&
         navigateFallback &&
         (event.request.mode === 'navigate') &&
