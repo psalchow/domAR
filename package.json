@@ -55,7 +55,7 @@
     "build": "node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom"
   },
-  "homepage": "https://owidder.github.io/radAR/v4/build",
+  "homepage": "https://cdn.rawgit.com/owidder/radAR/v5/build",
   "jest": {
     "collectCoverageFrom": [
       "src/**/*.{js,jsx}"
