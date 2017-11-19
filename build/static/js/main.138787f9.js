@@ -57,7 +57,7 @@
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "/radAR/build/";
+/******/ 	__webpack_require__.p = "/owidder/radAR/v7/build/";
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 202);
@@ -59146,4 +59146,4 @@ var top100={"stayin-alive":"Well,youcantellbythewayIusemywalkI'mawoman'sman:noti
 
 /***/ })
 /******/ ]);
-//# sourceMappingURL=main.605f44ba.js.map
+//# sourceMappingURL=main.138787f9.js.map
