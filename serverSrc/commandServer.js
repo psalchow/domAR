@@ -42,8 +42,18 @@ function sendCommandToAllSockets(commandString) {
     sendToAllSockets(command);
 }
 
+function* idGenerator(start) {
+    let id = start;
+    while(true) {
+        yield id;
+        id++;
+    }
+}
+
+const _id = idGenerator(0);
+
 wss.on('connection', function(ws) {
-    const socketId = ws._ultron.id;
+    const socketId = _.isUndefined(ws._ultron) ? _id.next().value : ws._ultron.id;
     addSocket(socketId, ws);
 
     ws.on('message', function(commandString) {
