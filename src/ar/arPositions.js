@@ -10,7 +10,7 @@ export const TYPE_RING = "ring";
 export const TYPE_TABLE = "table";
 
 export const DEFAULT_NUMBER_OF_POSSIBLE_PLACES = 50;
-export const DEFAULT_NUMBER_PF_TABLE_COLUMNS = 30;
+export const DEFAULT_NUMBER_PF_TABLE_COLUMNS = 3;
 
 export const randomSphereInit = (numberOfPossiblePlaces) => {
     const shuffledPlaces = _.shuffle(_.range(0, numberOfPossiblePlaces-1));
@@ -36,8 +36,8 @@ export const randomSphere = randomSphereInit(DEFAULT_NUMBER_OF_POSSIBLE_PLACES);
 
 export const tableInit = (numberOfCols, _cellWidth, _cellHeight, _xOffset, _yOffset, _zOffset) => {
     return (i) => {
-        const cellWidth = _.isUndefined(_cellWidth) ? 300 : _cellWidth;
-        const cellHeight = _.isUndefined(_cellHeight) ? 200 : _cellHeight;
+        const cellWidth = _.isUndefined(_cellWidth) ? 800 : _cellWidth;
+        const cellHeight = _.isUndefined(_cellHeight) ? 400 : _cellHeight;
         const xOffset = _.isUndefined(_xOffset) ? -1330 : _xOffset;
         const yOffset = _.isUndefined(_yOffset) ? 990 : _yOffset;
         const zOffset = _.isUndefined(_zOffset) ? -1000 : _zOffset;

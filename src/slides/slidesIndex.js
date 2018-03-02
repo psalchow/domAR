@@ -29,6 +29,7 @@ export const initSlides = async (rootSelector, slideCreateFunction, param) => {
     new CommandHub();
 
     const selectedFilename = query.paramValue("slide");
+    const type = query.paramValue("type");
 
     if(_.isEmpty(selectedFilename)) {
         slidarGlobal.withAr = true;
@@ -42,7 +43,7 @@ export const initSlides = async (rootSelector, slideCreateFunction, param) => {
         const selection = await slideCreateFunction(rootSelector);
         log.info("demo slides ready")
         selection.each(function (id, i) {
-            const object = setArPositionRotation(this, root, TYPE_RING, i, selection.size());
+            const object = setArPositionRotation(this, root, type || TYPE_RING, i, selection.size());
             slideControl.addObject(id, object);
         });
 
