@@ -9,7 +9,10 @@ const createStepPart = () => {
     const stepPartStr = slideIds.reduce((_stepPartStr, slideId) => {
         const stepsObject = slideControl.getStepsObject(slideId);
         if(!_.isUndefined(stepsObject)) {
-            return _stepPartStr + "&" + slideId + "=" + stepsObject.currentStepNumber;
+            return _stepPartStr + (_stepPartStr.length > 0 ? "&" : "") + slideId + "=" + stepsObject.currentStepNumber;
+        }
+        else {
+            return _stepPartStr;
         }
     }, "");
 
@@ -23,8 +26,7 @@ const createStatusString = (nextPrev) => {
 export const sendStatusString = (nextPrev) => {
     if(wsSender.isOnline() && slidarGlobal.isMaster) {
         const statusString = createStatusString(nextPrev);
-        const command = {command: "status", argument: statusString};
-        const commandString = JSON.stringify(command);
+        const commandString = "status " + statusString;
 
         return wsSender.send(commandString);
     }
