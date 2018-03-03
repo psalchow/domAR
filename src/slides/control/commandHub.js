@@ -3,6 +3,7 @@ import * as _ from 'lodash';
 import {log} from '../../util/log';
 import * as query from '../../util/query';
 
+import {slidarGlobal} from '../slidAR/slidarGlobal';
 import {execute} from './commandExecutor';
 
 const WS_HOST_PARAM = "wsHost";
@@ -27,5 +28,7 @@ export class CommandHub {
             log.info(commandStr);
             execute(commandStr);
         }
+
+        slidarGlobal.socket = this.socket;
     }
 }

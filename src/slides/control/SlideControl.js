@@ -24,6 +24,10 @@ class SlideControl {
         return this.slideIds.length;
     }
 
+    getSlideIds() {
+        return this.slideIds;
+    }
+
     _waitForAllSteps = (resolve) => {
         if(this.getNumberOfSteps() < this.getNumberOfSlides()) {
             setTimeout(() => this._waitForAllSteps(resolve), 100);
@@ -116,27 +120,40 @@ class SlideControl {
         }
     }
 
-    fwdSlide() {
+    gotoSlide(slideId) {
+        this.setCurrentSlideId(slideId);
+        if(!slidarGlobal.withAr) {
+            nonArSlides.nextSlide(slideId);
+        }
+    }
+
+    fwdSlide(sendStatusFunction) {
         if(slidarGlobal.withAr) {
             const allObjects = this.getAllObjects();
             arTransform.allFwd(allObjects, this.TWEEN);
             this.shiftForwardCurrentSlideId();
+            sendStatusFunction();
         }
         else {
             this.shiftForwardCurrentSlideId();
-            nonArSlides.nextSlide(this.currentSlideId);
+            sendStatusFunction().then(() => {
+                nonArSlides.nextSlide(this.currentSlideId);
+            });
         }
     }
 
-    backSlide() {
+    backSlide(sendStatusFunction) {
         if(slidarGlobal.withAr) {
             const allObjects = this.getAllObjects();
             arTransform.allBack(allObjects, this.TWEEN);
             this.shiftBackwardCurrentSlideId();
+            sendStatusFunction();
         }
         else {
             this.shiftBackwardCurrentSlideId();
-            nonArSlides.nextSlide(this.currentSlideId);
+            sendStatusFunction().then(() => {
+                nonArSlides.nextSlide(this.currentSlideId);
+            })
         }
     }
 
@@ -180,6 +197,10 @@ class SlideControl {
         return this.getStepsObject(this.currentSlideId);
     }
 
+    getCurrentSlideId() {
+        return this.currentSlideId;
+    }
+
     renderStepNumber() {
         const renderCounterElement = $("#" + this.currentSlideId + " .slidecounter");
         if(!_.isEmpty(renderCounterElement)) {
@@ -206,29 +227,33 @@ class SlideControl {
         return newStepNumber;
     }
 
-    _gotoStep(steps, fromStepNumber, toStepNumber) {
+    _gotoStep(steps, fromStepNumber, toStepNumber, resolve) {
         if(fromStepNumber == toStepNumber) {
-            return;
-        }
-        const step = steps[fromStepNumber];
-        if(toStepNumber > fromStepNumber) {
-            fct.call(step.f);
-            setTimeout(() => this._gotoStep(steps, fromStepNumber+1, toStepNumber), 100);
+            resolve();
         }
         else {
-            fct.call(step.b);
-            setTimeout(() => this._gotoStep(steps, fromStepNumber-1, toStepNumber), 100)
+            const step = steps[fromStepNumber];
+            if(toStepNumber > fromStepNumber) {
+                fct.call(step.f);
+                setTimeout(() => this._gotoStep(steps, fromStepNumber+1, toStepNumber, resolve), 100);
+            }
+            else {
+                fct.call(step.b);
+                setTimeout(() => this._gotoStep(steps, fromStepNumber-1, toStepNumber, resolve), 100)
+            }
         }
     }
 
     async gotoStep(slideId, toStepNumber) {
         await this.waitForAllSteps();
         const {steps, stepNumber} = this.getStepsObject(slideId);
-        this._gotoStep(steps, stepNumber, toStepNumber);
+        return new Promise((resolve) => {
+            this._gotoStep(steps, stepNumber, toStepNumber, resolve);
+        })
     }
 
     gotoStepOnCurrentSlide(toStepNumber) {
-        this.gotoStep(this.currentSlideId, toStepNumber);
+        return this.gotoStep(this.currentSlideId, toStepNumber);
     }
 
     forwardStep() {
@@ -263,11 +288,11 @@ class SlideControl {
         if(_.isEmpty(steps)) {
             return
         }
-        this.gotoStepOnCurrentSlide(steps.length-1);
+        return this.gotoStepOnCurrentSlide(steps.length-1);
     }
 
     gotoFirstStep() {
-        this.gotoStepOnCurrentSlide(0);
+        return this.gotoStepOnCurrentSlide(0);
     }
 
     backwardStep() {

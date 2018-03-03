@@ -24,12 +24,18 @@ const startSlideShow = (slideShowIntervalInSeconds) => {
     }
 }
 
+const checkIfMaster = () => {
+    const master = query.paramValue("master");
+    slidarGlobal.isMaster = !_.isUndefined(master);
+}
+
 export const initSlides = async (rootSelector, slideCreateFunction, param) => {
     key.init();
     new CommandHub();
 
     const selectedFilename = query.paramValue("slide");
     const type = query.paramValue("type");
+    checkIfMaster();
 
     if(_.isEmpty(selectedFilename)) {
         slidarGlobal.withAr = true;

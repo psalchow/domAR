@@ -1,5 +1,7 @@
 import {log} from '../../util/log';
 import {slideControl} from './SlideControl';
+import {sendStatusString} from './statusStringSender';
+import * as statusStringReceiver from './statusStringReceiver';
 
 const parse = (commandStr) => {
     try {
@@ -19,42 +21,51 @@ export const COMMAND_NEXT = "next";
 export const COMMAND_PREV = "prev";
 export const COMMAND_LAST = "last";
 export const COMMAND_FIRST = "first";
+export const COMMAND_STATUS = "status";
 
-export const executeCommand = (command, slideId) => {
+export const executeCommand = async (command, argument) => {
 
     log.info("command: " + command);
 
     switch (command) {
         case "pause":
-            slideControl.pauseJs(slideId);
+            slideControl.pauseJs(argument);
             break;
 
         case "resume":
-            slideControl.resumeJs(slideId);
+            slideControl.resumeJs(argument);
             break;
 
         case COMMAND_FWD:
             slideControl.forwardStep();
+            sendStatusString();
             break;
 
         case COMMAND_BACK:
             slideControl.backwardStep();
+            sendStatusString();
             break;
 
         case COMMAND_LAST:
-            slideControl.gotoLastStep();
+            await slideControl.gotoLastStep();
+            sendStatusString();
             break;
 
         case COMMAND_FIRST:
-            slideControl.gotoFirstStep();
+            await slideControl.gotoFirstStep();
+            sendStatusString();
             break;
 
         case COMMAND_NEXT:
-            slideControl.fwdSlide();
+            slideControl.fwdSlide(() => sendStatusString(COMMAND_NEXT));
             break;
 
         case COMMAND_PREV:
-            slideControl.backSlide();
+            slideControl.backSlide(() => sendStatusString(COMMAND_PREV));
+            break;
+
+        case COMMAND_STATUS:
+            statusStringReceiver.parse(argument);
             break;
 
         case "connected":
@@ -69,5 +80,5 @@ export const executeCommand = (command, slideId) => {
 export const execute = (commandObjStr) => {
     const commandObj = parse(commandObjStr);
 
-    executeCommand(commandObj.command, commandObj.slideId);
+    executeCommand(commandObj.command, commandObj.argument);
 }
