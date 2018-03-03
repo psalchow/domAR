@@ -4,37 +4,6 @@ import {slideControl} from '../control/SlideControl';
 import {paramValue} from '../../util/query';
 import {demo} from './demo';
 
-const _waitForSteps = (stepNum, resolve) => {
-    const currentStepsObject = slideControl.getCurrentStepsObject();
-    if(!_.isUndefined(currentStepsObject)) {
-        const currentSteps = currentStepsObject.steps;
-        if(!_.isUndefined(currentSteps)) {
-            const numberOfCurrentSteps = currentSteps.length;
-            if(numberOfCurrentSteps > stepNum) {
-                resolve();
-            }
-        }
-    }
-
-    setTimeout(() => _waitForSteps(stepNum, resolve), 100);
-}
-
-const _waitForAllSteps = (numberOfSteps, resolve) => {
-    if(slideControl.getNumberOfSteps() < numberOfSteps) {
-        setTimeout(() => _waitForAllSteps(numberOfSteps, resolve), 100);
-    }
-    else {
-        resolve();
-    }
-}
-
-const _step = (numberOfSteps) => {
-    if(numberOfSteps > 0) {
-        slideControl.forwardStep();
-        setTimeout(() => _step(numberOfSteps-1), 100);
-    }
-}
-
 export const createReverseStep = (step) => {
     const reverseStep = {f: step.b, b: step.f}
     return {step, reverseStep}

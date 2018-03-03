@@ -213,11 +213,11 @@ class SlideControl {
         const step = steps[fromStepNumber];
         if(toStepNumber > fromStepNumber) {
             fct.call(step.f);
-            this._gotoStep(steps, fromStepNumber+1, toStepNumber);
+            setTimeout(() => this._gotoStep(steps, fromStepNumber+1, toStepNumber), 100);
         }
         else {
             fct.call(step.b);
-            this._gotoStep(steps, fromStepNumber-1, toStepNumber);
+            setTimeout(() => this._gotoStep(steps, fromStepNumber-1, toStepNumber), 100)
         }
     }
 
