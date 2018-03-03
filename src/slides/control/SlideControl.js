@@ -20,6 +20,25 @@ class SlideControl {
         this.TWEEN = TWEEN;
     }
 
+    getNumberOfSlides() {
+        return this.slideIds.length;
+    }
+
+    _waitForAllSteps = (resolve) => {
+        if(this.getNumberOfSteps() < this.getNumberOfSlides()) {
+            setTimeout(() => this._waitForAllSteps(resolve), 100);
+        }
+        else {
+            setTimeout(() => resolve(), 100);
+        }
+    }
+
+    waitForAllSteps() {
+        return new Promise((resolve) => {
+            this._waitForAllSteps(resolve);
+        })
+    }
+
     registerConfig(slideId, config) {
         log.info("registered: " + slideId);
         log.info(config);
@@ -149,6 +168,10 @@ class SlideControl {
         return this.steps[slideId];
     }
 
+    getNumberOfSteps() {
+        return this.steps.length;
+    }
+
     setCurrentStepsObject(steps, currentStepNumber = 0) {
         this.setStepsObject(this.currentSlideId, steps, currentStepNumber);
     }
@@ -183,6 +206,31 @@ class SlideControl {
         return newStepNumber;
     }
 
+    _gotoStep(steps, fromStepNumber, toStepNumber) {
+        if(fromStepNumber == toStepNumber) {
+            return;
+        }
+        const step = steps[fromStepNumber];
+        if(toStepNumber > fromStepNumber) {
+            fct.call(step.f);
+            this._gotoStep(steps, fromStepNumber+1, toStepNumber);
+        }
+        else {
+            fct.call(step.b);
+            this._gotoStep(steps, fromStepNumber-1, toStepNumber);
+        }
+    }
+
+    async gotoStep(slideId, toStepNumber) {
+        await this.waitForAllSteps();
+        const {steps, stepNumber} = this.getStepsObject(slideId);
+        this._gotoStep(steps, stepNumber, toStepNumber);
+    }
+
+    gotoStepOnCurrentSlide(toStepNumber) {
+        this.gotoStep(this.currentSlideId, toStepNumber);
+    }
+
     forwardStep() {
         const {steps, currentStepNumber} = this.getCurrentStepsObject();
         if(_.isEmpty(steps)) {
@@ -209,20 +257,17 @@ class SlideControl {
         }
     }
 
-    gotoLastStep() {
+    async gotoLastStep() {
+        await this.waitForAllSteps();
         const {steps, currentStepNumber} = this.getCurrentStepsObject();
         if(_.isEmpty(steps)) {
             return
         }
-        this._stepFwd(steps.length - currentStepNumber);
+        this.gotoStepOnCurrentSlide(steps.length-1);
     }
 
     gotoFirstStep() {
-        const {steps, currentStepNumber} = this.getCurrentStepsObject();
-        if(_.isEmpty(steps) || !(currentStepNumber > 0)) {
-            return
-        }
-        this._stepBack(currentStepNumber);
+        this.gotoStepOnCurrentSlide(0);
     }
 
     backwardStep() {

@@ -19,6 +19,15 @@ const _waitForSteps = (stepNum, resolve) => {
     setTimeout(() => _waitForSteps(stepNum, resolve), 100);
 }
 
+const _waitForAllSteps = (numberOfSteps, resolve) => {
+    if(slideControl.getNumberOfSteps() < numberOfSteps) {
+        setTimeout(() => _waitForAllSteps(numberOfSteps, resolve), 100);
+    }
+    else {
+        resolve();
+    }
+}
+
 const _step = (numberOfSteps) => {
     if(numberOfSteps > 0) {
         slideControl.forwardStep();
@@ -34,9 +43,7 @@ export const createReverseStep = (step) => {
 export const init = () => {
     const stepNum = paramValue("step");
     if(stepNum > 0) {
-        new Promise((resolve) => _waitForSteps(stepNum, resolve)).then(() => {
-            _step(stepNum);
-        })
+        slideControl.gotoStepOnCurrentSlide(stepNum);
     }
 }
 
