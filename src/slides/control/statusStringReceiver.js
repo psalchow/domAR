@@ -23,17 +23,19 @@ const parseCurrentIdPart = (currentIdPartStr) => {
 }
 
 const parseNextPrevPart = (nextPrevPartStr) => {
-    switch (nextPrevPartStr) {
-        case COMMAND_NEXT:
-            slideControl.fwdSlide();
-            break;
+    if(slidarGlobal.withAr) {
+        switch (nextPrevPartStr) {
+            case COMMAND_NEXT:
+                slideControl.fwdSlide();
+                break;
 
-        case COMMAND_PREV:
-            slideControl.backSlide();
-            break;
+            case COMMAND_PREV:
+                slideControl.backSlide();
+                break;
 
-        default:
+            default:
             // do nothing
+        }
     }
 }
 

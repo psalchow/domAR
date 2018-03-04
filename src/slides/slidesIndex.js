@@ -35,10 +35,11 @@ export const initSlides = async (rootSelector, slideCreateFunction, param) => {
     new CommandHub();
 
     const selectedFilename = query.paramValue("slide");
+    const nonar = query.paramValue("nonar");
     const type = query.paramValue("type");
     checkIfMaster();
 
-    if(_.isEmpty(selectedFilename)) {
+    if(_.isEmpty(selectedFilename) && _.isEmpty(nonar)) {
         slidarGlobal.withAr = true;
         const slideShowIntervalInSeconds = param;
         const {root, app} = init();
@@ -58,7 +59,10 @@ export const initSlides = async (rootSelector, slideCreateFunction, param) => {
     }
     else {
         slidarGlobal.withAr = false;
-        await slideCreateFunction(rootSelector, selectedFilename).then(() => steps.init());
+        if(!_.isEmpty(selectedFilename)) {
+            slideControl.setCurrentSlideId(selectedFilename);
+            await slideCreateFunction(rootSelector, selectedFilename).then(() => steps.init());
+        }
     }
 
     executeCommand(COMMAND_INIT);

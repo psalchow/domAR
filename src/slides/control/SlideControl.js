@@ -250,12 +250,14 @@ class SlideControl {
         }
         else {
             if(toStepNumber > fromStepNumber) {
-                this.forwardStepOnSlideId(slideId);
-                setTimeout(() => this._gotoStep(slideId, toStepNumber, resolve), 100);
+                for(let i = 0; i < toStepNumber - fromStepNumber; i++) {
+                    this.forwardStepOnSlideId(slideId);
+                }
             }
             else {
-                this.backwardStepOnSlideId(slideId);
-                setTimeout(() => this._gotoStep(slideId, toStepNumber, resolve), 100)
+                for(let i = 0; i < fromStepNumber - toStepNumber; i++) {
+                    this.backwardStepOnSlideId(slideId);
+                }
             }
         }
     }
