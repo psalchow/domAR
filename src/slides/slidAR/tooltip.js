@@ -3,7 +3,6 @@ import * as d3 from 'd3';
 import * as _ from 'lodash';
 
 import * as domData from './domData';
-import {slideControl} from '../control/SlideControl';
 
 export const TOP = "top";
 export const BOTTOM = "bottom";

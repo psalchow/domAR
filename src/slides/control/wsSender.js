@@ -1,6 +1,7 @@
 import * as _ from 'lodash';
 import {slidarGlobal} from '../slidAR/slidarGlobal';
 
+/* eslint eqeqeq: "off" */
 const _waitForOpen = (resolve) => {
     console.log("state: " + slidarGlobal.socket.readyState);
     if(slidarGlobal.socket.readyState == 0) {

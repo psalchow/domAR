@@ -41,6 +41,7 @@ switch (bodyType) {
 
     case BODY_TYPE_SLIDE_DBAR:
         initSlides("#container", dbar.init, paramValue);
+        break;
 
     default:
         // do nothing

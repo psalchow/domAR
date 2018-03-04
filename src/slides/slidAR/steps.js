@@ -1,5 +1,3 @@
-import * as _ from 'lodash';
-
 import {slideControl} from '../control/SlideControl';
 import {paramValue} from '../../util/query';
 import {demo} from './demo';

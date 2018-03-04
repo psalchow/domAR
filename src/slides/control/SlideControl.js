@@ -8,6 +8,7 @@ import * as nonArSlides from '../nonArSlides';
 
 import * as arTransform from '../../ar/arTransform';
 
+/* eslint eqeqeq: "off" */
 class SlideControl {
 
     constructor(withAr) {
@@ -302,7 +303,7 @@ class SlideControl {
 
     async gotoLastStep() {
         await this.waitForAllSteps();
-        const {steps, stepNumber} = this.getCurrentStepsObject();
+        const {steps} = this.getCurrentStepsObject();
         if(_.isEmpty(steps)) {
             return
         }

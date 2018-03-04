@@ -1,6 +1,3 @@
-import * as _ from 'lodash';
-
-import {log} from '../util/log';
 import {getArPositionRotation, setPositionRotationOnObject} from './arPositions';
 
 const DEFAULT_DURATION = 1000;

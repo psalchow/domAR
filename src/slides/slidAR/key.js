@@ -1,6 +1,5 @@
 import {Keyboard} from 'keyboardjs';
 
-import {slideControl} from '../control/SlideControl';
 import {executeCommand, COMMAND_BACK, COMMAND_FWD, COMMAND_NEXT, COMMAND_PREV, COMMAND_LAST, COMMAND_FIRST} from '../control/commandExecutor';
 
 const usLocale = require('keyboardjs/locales/us');
