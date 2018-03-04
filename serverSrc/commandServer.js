@@ -3,9 +3,6 @@ const WebSocket = require('ws');
 
 const commandParser = require('./commandParser');
 
-const port = process.env.PORT||1337;
-const wss = new WebSocket.Server({port});
-
 const sockets = {};
 
 let lastCommandObj;
@@ -56,30 +53,39 @@ function* idGenerator(start) {
     }
 }
 
-const _id = idGenerator(0);
+function start() {
+    const port = process.env.PORT||1337;
+    const wss = new WebSocket.Server({port});
 
-wss.on('connection', function(ws) {
-    const socketId = _.isUndefined(ws._ultron) ? _id.next().value : ws._ultron.id;
-    addSocket(socketId, ws);
+    const _id = idGenerator(0);
 
-    ws.on('message', function(commandString) {
-        console.log(commandString);
-        lastCommandObj = commandParser.parse(commandString);
-        sendCommandObjToAllSockets(lastCommandObj);
+    wss.on('connection', function(ws) {
+        const socketId = _.isUndefined(ws._ultron) ? _id.next().value : ws._ultron.id;
+        addSocket(socketId, ws);
+
+        ws.on('message', function(commandString) {
+            console.log(commandString);
+            lastCommandObj = commandParser.parse(commandString);
+            sendCommandObjToAllSockets(lastCommandObj);
+        });
+
+        ws.on('error', (error) => console.log(error));
+
+        ws.on('close', () => {
+            console.log('disconnected: ' + socketId);
+            removeSocket(socketId);
+        });
+
+        sendObject(ws, {
+            command: "connected",
+            socketId
+        });
+        if(!_.isUndefined(lastCommandObj)) {
+            sendObject(ws, lastCommandObj);
+        }
     });
+}
 
-    ws.on('error', (error) => console.log(error));
-
-    ws.on('close', () => {
-        console.log('disconnected: ' + socketId);
-        removeSocket(socketId);
-    });
-
-    sendObject(ws, {
-        command: "connected",
-        socketId
-    });
-    if(!_.isUndefined(lastCommandObj)) {
-        sendObject(ws, lastCommandObj);
-    }
-});
+module.exports = {
+    start
+}

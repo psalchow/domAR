@@ -3,6 +3,8 @@ var http = require('http');
 var https = require('https');
 var pem = require('pem');
 
+const commandServer = require('./serverSrc/commandServer');
+
 const httpPort = process.env.PORT||1338;
 const folder = process.argv[2] || 'build';
 
@@ -24,6 +26,8 @@ pem.createCertificate({ days:1, selfSigned:true }, function(err, keys) {
 
     // Create an http service
     http.createServer(app).listen(httpPort);
+
+    commandServer.start();
 
     console.log(`serving folder '${folder}' on http://localhost:${httpPort}`);
 });

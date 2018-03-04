@@ -64,6 +64,7 @@
     "script-loader": "^0.7.2"
   },
   "scripts": {
+    "server": "node server.js ../",
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom"
