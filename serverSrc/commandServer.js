@@ -8,6 +8,8 @@ const wss = new WebSocket.Server({port});
 
 const sockets = {};
 
+let lastCommandObj;
+
 function addSocket(socketId, socket) {
     console.log("Add socket: " + socketId);
     sockets[socketId] = socket;
@@ -42,6 +44,10 @@ function sendCommandToAllSockets(commandString) {
     sendToAllSockets(command);
 }
 
+function sendCommandObjToAllSockets(commandObj) {
+    sendToAllSockets(commandObj);
+}
+
 function* idGenerator(start) {
     let id = start;
     while(true) {
@@ -57,7 +63,9 @@ wss.on('connection', function(ws) {
     addSocket(socketId, ws);
 
     ws.on('message', function(commandString) {
-        sendCommandToAllSockets(commandString);
+        console.log(commandString);
+        lastCommandObj = commandParser.parse(commandString);
+        sendCommandObjToAllSockets(lastCommandObj);
     });
 
     ws.on('error', (error) => console.log(error));
@@ -70,5 +78,8 @@ wss.on('connection', function(ws) {
     sendObject(ws, {
         command: "connected",
         socketId
-    })
+    });
+    if(!_.isUndefined(lastCommandObj)) {
+        sendObject(ws, lastCommandObj);
+    }
 });

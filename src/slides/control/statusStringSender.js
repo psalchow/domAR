@@ -9,7 +9,7 @@ const createStepPart = () => {
     const stepPartStr = slideIds.reduce((_stepPartStr, slideId) => {
         const stepsObject = slideControl.getStepsObject(slideId);
         if(!_.isUndefined(stepsObject)) {
-            return _stepPartStr + (_stepPartStr.length > 0 ? "&" : "") + slideId + "=" + stepsObject.currentStepNumber;
+            return _stepPartStr + (_stepPartStr.length > 0 ? "&" : "") + slideId + "=" + stepsObject.stepNumber;
         }
         else {
             return _stepPartStr;

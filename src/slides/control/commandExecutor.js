@@ -22,6 +22,7 @@ export const COMMAND_PREV = "prev";
 export const COMMAND_LAST = "last";
 export const COMMAND_FIRST = "first";
 export const COMMAND_STATUS = "status";
+export const COMMAND_INIT = "init";
 
 export const executeCommand = async (command, argument) => {
 
@@ -66,6 +67,10 @@ export const executeCommand = async (command, argument) => {
 
         case COMMAND_STATUS:
             statusStringReceiver.parse(argument);
+            break;
+
+        case COMMAND_INIT:
+            sendStatusString();
             break;
 
         case "connected":

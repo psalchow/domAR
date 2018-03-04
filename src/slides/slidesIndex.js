@@ -4,6 +4,7 @@ import {log} from '../util/log';
 import {setArPositionRotation, TYPE_RING} from '../ar/arPositions';
 import {init} from '../ar/argonApp';
 import {CommandHub} from './control/commandHub';
+import {executeCommand, COMMAND_INIT} from './control/commandExecutor';
 import {slideControl} from './control/SlideControl';
 import * as key from './slidAR/key';
 import * as query from '../util/query';
@@ -57,6 +58,8 @@ export const initSlides = async (rootSelector, slideCreateFunction, param) => {
     }
     else {
         slidarGlobal.withAr = false;
-        slideCreateFunction(rootSelector, selectedFilename).then(() => steps.init());
+        await slideCreateFunction(rootSelector, selectedFilename).then(() => steps.init());
     }
+
+    executeCommand(COMMAND_INIT);
 }

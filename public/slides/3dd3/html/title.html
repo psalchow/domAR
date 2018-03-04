@@ -59,17 +59,21 @@
 
 <script>
     (function () {
+        var timer1, timer2;
+
         function animate() {
             slidAR.classUtil.setClass(".slide-title div.char", "xaxis", 100);
-            setTimeout(function () {
+            timer1 = setTimeout(function () {
                 slidAR.classUtil.setClass("#totaly", "totaly");
             }, 10000);
-            setTimeout(function () {
+            timer2 = setTimeout(function () {
                 slidAR.classUtil.setClass("#totalz", "totalz");
             }, 20000);
         }
 
         function _animate() {
+            clearTimeout(timer1);
+            clearTimeout(timer2);
             slidAR.classUtil.removeClass(".slide-title div.char", "xaxis");
             slidAR.classUtil.removeClass("#totaly", "totaly");
             slidAR.classUtil.removeClass("#totalz", "totalz");
