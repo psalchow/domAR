@@ -1,9 +1,20 @@
+import * as _ from 'lodash';
+
 export const call = (fct) => {
-    if(isFunction(fct)) {
-        fct();
+    if(_.isFunction(fct)) {
+        return fct();
+    }
+}
+
+export const callWithPromise = (fct) => {
+    if(_.isFunction(fct)) {
+        return fct();
+    }
+    else {
+        return Promise.resolve();
     }
 }
 
 export const isFunction = (fct) => {
-    return (typeof fct === 'function');
+    return _.isFunction(fct);
 }

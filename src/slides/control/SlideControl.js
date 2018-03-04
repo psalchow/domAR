@@ -134,11 +134,11 @@ class SlideControl {
             const allObjects = this.getAllObjects();
             arTransform.allFwd(allObjects, this.TWEEN);
             this.shiftForwardCurrentSlideId();
-            sendStatusFunction();
+            fct.call(sendStatusFunction);
         }
         else {
             this.shiftForwardCurrentSlideId();
-            sendStatusFunction().then(() => {
+            fct.callWithPromise(sendStatusFunction).then(() => {
                 nonArSlides.nextSlide(this.currentSlideId);
             });
         }
@@ -149,11 +149,11 @@ class SlideControl {
             const allObjects = this.getAllObjects();
             arTransform.allBack(allObjects, this.TWEEN);
             this.shiftBackwardCurrentSlideId();
-            sendStatusFunction();
+            fct.call(sendStatusFunction);
         }
         else {
             this.shiftBackwardCurrentSlideId();
-            sendStatusFunction().then(() => {
+            fct.callWithPromise(sendStatusFunction).then(() => {
                 nonArSlides.nextSlide(this.currentSlideId);
             })
         }
@@ -318,7 +318,7 @@ class SlideControl {
         if(_.isEmpty(steps) || !(stepNumber > 0)) {
             return
         }
-        const newstepNumber = this.decCurrentStepNumber();
+        const newstepNumber = this.decStepNumber(slideId);
         const step = steps[newstepNumber];
         fct.call(step.b);
     }
