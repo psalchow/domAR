@@ -165,6 +165,7 @@ class SlideControl {
 
     addSlideId(slideId) {
         this.slideIds.push(slideId);
+        this.steps[slideId] = {stepNumber: 0};
     }
 
     shiftForwardCurrentSlideId() {
