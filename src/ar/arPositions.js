@@ -13,7 +13,7 @@ export const DEFAULT_NUMBER_OF_POSSIBLE_PLACES = 50;
 export const DEFAULT_NUMBER_PF_TABLE_COLUMNS = 3;
 
 const addOffsetToPhaseFrom0To2 = (phase, offset = 0) => {
-    const newPhase = (phase + (offset / 100)) % 2;
+    const newPhase = (phase + (offset / 500)) % 2;
     return newPhase >= 0 ? newPhase : newPhase + 2;
 }
 

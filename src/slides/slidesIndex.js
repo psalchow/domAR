@@ -32,8 +32,8 @@ const checkIfMaster = () => {
 }
 
 const addHudButtons = () => {
-    const onLeftClick = () => slideControl.moveOffsetOnAllSlides(-10);
-    const onRightClick = () => slideControl.moveOffsetOnAllSlides(10);
+    const onLeftClick = () => slideControl.moveOffsetOnAllSlides(+10);
+    const onRightClick = () => slideControl.moveOffsetOnAllSlides(-10);
 
     hudUtil.addLeftRightButtons("#_hud", onLeftClick, onRightClick);
 }

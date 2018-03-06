@@ -89,7 +89,7 @@ const moveOffset = (object, TWEEN, offset) => {
     object._data.addToOffset(offset);
     const {position, rotation} = refreshPositionAndRotation(object);
 
-    moveTo(object, position, rotation, TWEEN);
+    moveTo(object, position, rotation, TWEEN, 50);
 }
 
 export const allNext = (allObjects, TWEEN) => {
