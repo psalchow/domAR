@@ -24,11 +24,16 @@
 
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
     <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
-    <title>delimited.io</title>
+    <title>DOM based AR</title>
 </head>
 <body>
 <div id="container"></div>
-
+<div id="_hud" style="pointer-events:auto">
+    <div class="menu">
+        <button class="lefthud"><i class="material-icons">keyboard_arrow_left</i></button>
+        <button class="righthud"><i class="material-icons">keyboard_arrow_right</i></button>
+    </div>
+</div>
 <script>
     $(document).ready(function(){
         $.protip();

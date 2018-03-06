@@ -15,6 +15,7 @@ class SlideControl {
         this.configs = {};
         this.steps = {};
         this.slideIds = [];
+        this.currentOffset = 0;
     }
 
     setTWEEN(TWEEN) {
