@@ -11,6 +11,7 @@ import * as query from '../util/query';
 import * as slidAR from './slidAR/slidAR';
 import {slidarGlobal} from './slidAR/slidarGlobal';
 import * as steps from './slidAR/steps';
+import * as hudUtil from "../ar/hudUtil";
 
 window.slidAR = slidAR;
 
@@ -28,6 +29,13 @@ const startSlideShow = (slideShowIntervalInSeconds) => {
 const checkIfMaster = () => {
     const master = query.paramValue("master");
     slidarGlobal.isMaster = !_.isUndefined(master);
+}
+
+const addHudButtons = () => {
+    const onLeftClick = () => slideControl.moveOffsetOnAllSlides(-10);
+    const onRightClick = () => slideControl.moveOffsetOnAllSlides(10);
+
+    hudUtil.addLeftRightButtons("#_hud", onLeftClick, onRightClick);
 }
 
 export const initSlides = async (rootSelector, slideCreateFunction, param) => {
@@ -54,6 +62,8 @@ export const initSlides = async (rootSelector, slideCreateFunction, param) => {
             const object = setArPositionRotation(this, root, type || TYPE_RING, i, selection.size());
             slideControl.addObject(id, object);
         });
+
+        addHudButtons();
 
         startSlideShow(slideShowIntervalInSeconds);
     }

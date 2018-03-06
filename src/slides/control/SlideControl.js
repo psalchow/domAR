@@ -15,7 +15,6 @@ class SlideControl {
         this.configs = {};
         this.steps = {};
         this.slideIds = [];
-        this.currentOffset = 0;
     }
 
     setTWEEN(TWEEN) {
@@ -144,6 +143,11 @@ class SlideControl {
                 nonArSlides.nextSlide(this.currentSlideId);
             });
         }
+    }
+
+    moveOffsetOnAllSlides(offset) {
+        const allObjects = this.getAllObjects();
+        arTransform.allMoveOffset(allObjects, this.TWEEN, offset);
     }
 
     backSlide(sendStatusFunction) {

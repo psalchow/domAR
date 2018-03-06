@@ -48,4 +48,8 @@ export class ObjectData {
     setOffset(offset) {
         this.offset = offset;
     }
+
+    addToOffset(offset) {
+        this.offset += offset;
+    }
 }

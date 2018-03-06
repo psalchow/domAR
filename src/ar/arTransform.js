@@ -86,7 +86,7 @@ const fwdBack = (object, TWEEN, trueIfFwd) => {
 }
 
 const moveOffset = (object, TWEEN, offset) => {
-    object._data.setOffset(offset);
+    object._data.addToOffset(offset);
     const {position, rotation} = refreshPositionAndRotation(object);
 
     moveTo(object, position, rotation, TWEEN);
