@@ -85,7 +85,7 @@ const fwdBack = (object, TWEEN, trueIfFwd) => {
     object._data.setIndex(nextIndex);
 }
 
-const moveOffset = (object, TWEEN, offset) => {
+export const moveOffset = (object, TWEEN, offset) => {
     object._data.addToOffset(offset);
     const {position, rotation} = refreshPositionAndRotation(object);
 

@@ -1,6 +1,9 @@
 import * as d3 from 'd3';
+import * as $ from 'jquery';
 
 export const addLeftRightButtons = (hudSelector, onLeftClick, onRightClick) => {
+    $(hudSelector).empty();
+
     const menu = d3.selectAll(hudSelector)
         .append("div")
         .attr("class", "menu")
