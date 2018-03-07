@@ -1,6 +1,8 @@
 const _ = require('lodash');
 const WebSocket = require('ws');
 
+const NOP = () => {};
+
 const callCallback = (callback, paramArray) => {
     if(_.isFunction(callback)) {
         callback.apply(undefined, paramArray);
@@ -11,11 +13,11 @@ class WebSocketServer {
 
     constructor() {
         this.sockets = {};
-        this.lastSentObject;
-        this.onMessageCallback;
-        this.onCloseCallback;
-        this.onErrorCallback;
-        this.onConnectCallback;
+        this.lastSentObject = undefined;
+        this.onMessageCallback = NOP;
+        this.onCloseCallback = NOP;
+        this.onErrorCallback = NOP;
+        this.onConnectCallback = NOP;
     }
 
     *idGenerator(start) {
