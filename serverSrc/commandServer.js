@@ -26,23 +26,11 @@ function sendObject(socket, obj) {
     });
 }
 
-function sendToAllSockets(obj) {
+function sendObjectToAllSockets(obj) {
     _.forOwn(sockets, function (socket, socketId) {
         console.log("send to socket " + socketId);
         sendObject(socket, obj);
     })
-}
-
-function sendCommandToAllSockets(commandString) {
-    const command = commandParser.parse(commandString);
-    console.log("send to all sockets:");
-    console.log(command);
-
-    sendToAllSockets(command);
-}
-
-function sendCommandObjToAllSockets(commandObj) {
-    sendToAllSockets(commandObj);
 }
 
 function* idGenerator(start) {
@@ -66,7 +54,7 @@ function start() {
         ws.on('message', function(commandString) {
             console.log(commandString);
             lastCommandObj = commandParser.parse(commandString);
-            sendCommandObjToAllSockets(lastCommandObj);
+            sendObjectToAllSockets(lastCommandObj);
         });
 
         ws.on('error', (error) => console.log(error));
@@ -86,6 +74,11 @@ function start() {
     });
 }
 
+function websocketServer() {
+
+}
+
+
 module.exports = {
-    start
+    start, sendObject, sendObjectToAllSockets
 }
