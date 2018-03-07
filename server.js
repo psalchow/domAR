@@ -27,7 +27,7 @@ pem.createCertificate({ days:1, selfSigned:true }, function(err, keys) {
     // Create an http service
     http.createServer(app).listen(httpPort);
 
-    commandServer.start();
+    commandServer.startNew();
 
     console.log(`serving folder '${folder}' on http://localhost:${httpPort}`);
 });

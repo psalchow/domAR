@@ -1,3 +1,5 @@
+import * as _ from 'lodash';
+
 import {log} from '../../util/log';
 import {slideControl} from './SlideControl';
 import {sendStatusString} from './statusStringSender';
@@ -85,5 +87,7 @@ export const executeCommand = async (command, argument) => {
 export const execute = (commandObjStr) => {
     const commandObj = parse(commandObjStr);
 
-    executeCommand(commandObj.command, commandObj.argument);
+    if(!_.isEmpty(commandObj.command)) {
+        executeCommand(commandObj.command, commandObj.argument);
+    }
 }
