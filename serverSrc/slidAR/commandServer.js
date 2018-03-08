@@ -1,7 +1,7 @@
 const _ = require('lodash');
 
 const commandParser = require('./commandParser');
-const {WebSocketServer} = require('./WebSocketServer');
+const {WebSocketServer} = require('../WebSocketServer');
 
 let lastCommandObj;
 

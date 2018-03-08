@@ -3,7 +3,7 @@ var http = require('http');
 var https = require('https');
 var pem = require('pem');
 
-const commandServer = require('./serverSrc/commandServer');
+const commandServer = require('./serverSrc/slidAR/commandServer');
 
 const httpPort = process.env.PORT||1338;
 const folder = process.argv[2] || 'build';
