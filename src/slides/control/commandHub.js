@@ -36,8 +36,10 @@ export class CommandHub {
 }
 
 export const connect = () => {
-    webSocketHub.connect((commandStr) => {
+    const socket = webSocketHub.connect((commandStr) => {
         log.info(commandStr);
         execute(commandStr);
-    })
+    });
+
+    slidarGlobal.socket = socket;
 }

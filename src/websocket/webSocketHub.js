@@ -2,7 +2,6 @@ import * as _ from 'lodash';
 
 import {log} from '../util/log';
 import * as query from '../util/query';
-import {slidarGlobal} from '../slides/slidAR/slidarGlobal';
 
 const WS_HOST_PARAM = "wsHost";
 
@@ -21,10 +20,10 @@ export const connect = (onMessageCallback) => {
     const socket = new WebSocket("ws://" + wsHost + ":" + port);
 
     socket.onmessage = function (event) {
-        const commandStr = event.data;
-        log.info(commandStr);
-        onMessageCallback(commandStr);
+        const messageString = event.data;
+        log.info(messageString);
+        onMessageCallback(messageString);
     }
 
-    slidarGlobal.socket = socket;
+    return socket;
 }
