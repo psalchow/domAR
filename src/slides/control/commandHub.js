@@ -6,6 +6,8 @@ import * as query from '../../util/query';
 import {slidarGlobal} from '../slidAR/slidarGlobal';
 import {execute} from './commandExecutor';
 
+import * as webSocketHub from '../../websocket/webSocketHub';
+
 const WS_HOST_PARAM = "wsHost";
 
 const host = window.location.hostname;
@@ -31,4 +33,11 @@ export class CommandHub {
 
         slidarGlobal.socket = this.socket;
     }
+}
+
+export const connect = () => {
+    webSocketHub.connect((commandStr) => {
+        log.info(commandStr);
+        execute(commandStr);
+    })
 }

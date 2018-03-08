@@ -1,3 +1,5 @@
+const _ = require('lodash');
+
 const commandParser = require('./commandParser');
 const {WebSocketServer} = require('./WebSocketServer');
 
@@ -9,13 +11,17 @@ function startNew() {
 
     webSocketServer.onConnectCallback = (socketId, lastSentObject) => {
         webSocketServer.sendObject(socketId, {socketId});
-        webSocketServer.sendObject(socketId, lastSentObject);
+        if(!_.isUndefined(lastCommandObj)) {
+            webSocketServer.sendObject(socketId, lastCommandObj);
+        }
     }
 
     webSocketServer.onMessageCallback = (commandString) => {
-        console.log(commandString);
+        console.log("message: " + commandString);
         lastCommandObj = commandParser.parse(commandString);
-        webSocketServer.sendObjectToAllSockets(lastCommandObj);
+        if(!_.isUndefined(lastCommandObj)) {
+            webSocketServer.sendObjectToAllSockets(lastCommandObj);
+        }
     }
 
     webSocketServer.connect();
