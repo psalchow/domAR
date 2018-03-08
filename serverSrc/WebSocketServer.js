@@ -13,7 +13,7 @@ class WebSocketServer {
 
     constructor() {
         this.sockets = {};
-        this.lastSentObject = undefined;
+        this.lastSentString = undefined;
         this.onMessageCallback = NOP;
         this.onCloseCallback = NOP;
         this.onErrorCallback = NOP;
@@ -28,8 +28,7 @@ class WebSocketServer {
         }
     }
 
-    connect() {
-        const port = process.env.PORT||1337;
+    connect(port) {
         const wss = new WebSocket.Server({port});
 
         const _id = this.idGenerator(0);
@@ -54,8 +53,10 @@ class WebSocketServer {
                 callCallback(this.onCloseCallback);
             });
 
-            callCallback(this.onConnectCallback, [socketId, this.lastSentObject]);
+            callCallback(this.onConnectCallback, [socketId, this.lastSentString]);
         });
+
+        console.log(`started web socket on port: ${port}`);
     }
 
     addSocket(socketId, socket) {
@@ -67,17 +68,21 @@ class WebSocketServer {
         delete this.sockets[socketId];
     }
 
-    _sendObject(socket, obj) {
-        const strObj = JSON.stringify(obj);
-        console.log("send: " + strObj);
-        socket.send(strObj, (error) => {
+    _sendString(socket, string) {
+        console.log("send: " + string);
+        socket.send(string, (error) => {
             if(!_.isEmpty(error)) {
                 console.log(error);
             }
             else {
-                this.lastSentObject = obj;
+                this.lastSentString = string;
             }
         });
+    }
+
+    _sendObject(socket, obj) {
+        const strObj = JSON.stringify(obj);
+        this._sendString(socket, strObj);
     }
 
     sendObject(socketId, obj) {
@@ -89,6 +94,13 @@ class WebSocketServer {
         _.forOwn(this.sockets, (socket, socketId) => {
             console.log("send to socket " + socketId);
             this._sendObject(socket, obj);
+        })
+    }
+
+    sendStringToAllSocktes(stringToSend) {
+        _.forOwn(this.sockets, (socket, socketId) => {
+            console.log("send to socket " + socketId);
+            this._sendString(socket, stringToSend);
         })
     }
 }

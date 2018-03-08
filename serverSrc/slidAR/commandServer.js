@@ -9,7 +9,7 @@ function startNew() {
 
     const webSocketServer = new WebSocketServer();
 
-    webSocketServer.onConnectCallback = (socketId, lastSentObject) => {
+    webSocketServer.onConnectCallback = (socketId) => {
         webSocketServer.sendObject(socketId, {socketId});
         if(!_.isUndefined(lastCommandObj)) {
             webSocketServer.sendObject(socketId, lastCommandObj);
