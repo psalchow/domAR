@@ -4,7 +4,7 @@ const http = require('http');
 const {WebSocketServer} = require('./WebSocketServer');
 
 function startServer() {
-    const httpPort = process.env.PORT||1338;
+    const httpPort = process.argv[3] || 1338;
     const folder = process.argv[2] || 'build';
 
     const app = express();
@@ -17,7 +17,7 @@ function startServer() {
 
 function startWebSocketServer() {
 
-    const webSocketPort = process.env.PORT||1337;
+    const webSocketPort = process.argv[4] || 1337;
 
     const webSocketServer = new WebSocketServer();
 

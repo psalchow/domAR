@@ -1,15 +1,19 @@
 import * as d3 from 'd3';
 import * as $ from 'jquery';
 
+import {slidarGlobal} from '../slides/slidAR/slidarGlobal';
+
 export const addLeftRightButtons = (hudSelector, onLeftClick, onRightClick) => {
     $(hudSelector).empty();
 
-    const menu = d3.selectAll(hudSelector)
-        .append("div")
-        .attr("class", "menu")
+    if(slidarGlobal.withAr) {
+        const menu = d3.selectAll(hudSelector)
+            .append("div")
+            .attr("class", "menu")
 
-    addHudButton(menu, "lefthud", "keyboard_arrow_left", onLeftClick);
-    addHudButton(menu, "righthud", "keyboard_arrow_right", onRightClick);
+        addHudButton(menu, "lefthud", "keyboard_arrow_left", onLeftClick);
+        addHudButton(menu, "righthud", "keyboard_arrow_right", onRightClick);
+    }
 }
 
 export const addHudButton = (parent, classname, materialIcon, onClick) => {

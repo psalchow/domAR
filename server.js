@@ -5,7 +5,8 @@ var pem = require('pem');
 
 const commandServer = require('./serverSrc/slidAR/commandServer');
 
-const httpPort = process.env.PORT||1338;
+const wsPort = process.argv[4] || 2337;
+const httpPort = process.argv[3] || 2338;
 const folder = process.argv[2] || 'build';
 
 pem.createCertificate({ days:1, selfSigned:true }, function(err, keys) {
@@ -27,7 +28,7 @@ pem.createCertificate({ days:1, selfSigned:true }, function(err, keys) {
     // Create an http service
     http.createServer(app).listen(httpPort);
 
-    commandServer.startNew();
+    commandServer.startNew(wsPort);
 
-    console.log(`serving folder '${folder}' on http://localhost:${httpPort}`);
+    console.log(`serving folder '${folder}' on port: ${httpPort}`);
 });

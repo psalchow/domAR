@@ -11,7 +11,7 @@ import * as webSocketHub from '../../websocket/webSocketHub';
 const WS_HOST_PARAM = "wsHost";
 
 const host = window.location.hostname;
-const port = 1337;
+const port = 2337;
 
 export class CommandHub {
     constructor() {

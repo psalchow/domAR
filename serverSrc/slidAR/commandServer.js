@@ -5,7 +5,7 @@ const {WebSocketServer} = require('../WebSocketServer');
 
 let lastCommandObj;
 
-function startNew() {
+function startNew(port) {
 
     const webSocketServer = new WebSocketServer();
 
@@ -24,7 +24,7 @@ function startNew() {
         }
     }
 
-    webSocketServer.connect();
+    webSocketServer.connect(port);
 }
 
 module.exports = {

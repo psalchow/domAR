@@ -63,8 +63,6 @@ export const initSlides = async (rootSelector, slideCreateFunction, param) => {
             slideControl.addObject(id, object);
         });
 
-        addHudButtons();
-
         startSlideShow(slideShowIntervalInSeconds);
     }
     else {
@@ -74,6 +72,8 @@ export const initSlides = async (rootSelector, slideCreateFunction, param) => {
             await slideCreateFunction(rootSelector, selectedFilename).then(() => steps.init());
         }
     }
+
+    addHudButtons();
 
     executeCommand(COMMAND_INIT);
 }
