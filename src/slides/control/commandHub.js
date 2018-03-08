@@ -36,7 +36,7 @@ export class CommandHub {
 }
 
 export const connect = () => {
-    const socket = webSocketHub.connect((commandStr) => {
+    const socket = webSocketHub.connect(2337, (commandStr) => {
         log.info(commandStr);
         execute(commandStr);
     });

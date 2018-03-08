@@ -6,9 +6,8 @@ import * as query from '../util/query';
 const WS_HOST_PARAM = "wsHost";
 
 const host = window.location.hostname;
-const port = 2337;
 
-export const connect = (onMessageCallback) => {
+export const connect = (port, onMessageCallback) => {
     const wsHostParam = query.paramValue(WS_HOST_PARAM);
 
     if(_.isEmpty(wsHostParam)) {
