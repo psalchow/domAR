@@ -22,7 +22,7 @@ function startWebSocketServer() {
     const webSocketServer = new WebSocketServer();
 
     webSocketServer.onMessageCallback = (messaqeString) => {
-        webSocketServer.sendStringToAllSocktes(messaqeString);
+        webSocketServer.sendStringToAllSockets(messaqeString);
     }
 
     webSocketServer.connect(webSocketPort);

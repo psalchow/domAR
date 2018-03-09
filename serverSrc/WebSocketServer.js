@@ -97,7 +97,7 @@ class WebSocketServer {
         })
     }
 
-    sendStringToAllSocktes(stringToSend) {
+    sendStringToAllSockets(stringToSend) {
         _.forOwn(this.sockets, (socket, socketId) => {
             console.log("send to socket " + socketId);
             this._sendString(socket, stringToSend);
