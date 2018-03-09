@@ -39,8 +39,13 @@
                     {id: "html7", name: "logo/html7.html"},
                 ]
                 break;
+            case "schedule":
+                window._pages = [
+                    {id: "schedule", name: "schedule/schedule.html"}
+                ]
+                break;
             default:
-                console.log("qrTarget-parameter did not match!");
+                console.log("qrTarget-parameter " + target + " did not match!");
                 // do nothing
          }
     }
