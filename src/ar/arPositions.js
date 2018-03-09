@@ -54,7 +54,7 @@ export const tableInit = (numberOfCols, _cellWidth, _cellHeight, _xOffset, _yOff
         const row = Math.floor(i / numberOfCols);
         const col = i % numberOfCols;
         const table = new THREE.Object3D();
-        table.position.x = (col * cellWidth) + xOffset + tableOffset(offset);
+        table.position.x = (col * cellWidth) + xOffset - tableOffset(offset);
         table.position.y = -(row * cellHeight) + yOffset;
         table.position.z = zOffset;
 
@@ -168,7 +168,7 @@ export const getArPositionRotation = (type, i, num, positionFunction, offset) =>
 
         case TYPE_TABLE:
             if(_.isFunction(positionFunction)) {
-                three3dObject = positionFunction(i);
+                three3dObject = positionFunction(i, offset);
             }
             else {
                 three3dObject = table(i, offset);
