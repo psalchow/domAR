@@ -23,11 +23,11 @@
 
     // check for qr-code defined param
     if (window.location.href.indexOf("qrTarget") > 1) {
-        console.log("got something!")
-
         var target = getParameterByName("qrTarget");
 
-        switch(target) {
+        console.log("got something: " + target);
+
+        switch (target) {
             case "logo":
                 window._pages = [
                     {id: "html1", name: "logo/html1.html"},
@@ -37,16 +37,22 @@
                     {id: "html5", name: "logo/html5.html"},
                     {id: "html6", name: "logo/html6.html"},
                     {id: "html7", name: "logo/html7.html"},
-                ]
+                ];
                 break;
             case "schedule":
                 window._pages = [
                     {id: "schedule", name: "schedule/schedule.html"}
-                ]
+                ];
+                break;
+            case "stocks":
+                window._pages = [
+                    {id: "html1", name: "stocks/html1.html"},
+                    {id: "html2", name: "stocks/html2.html"}
+                ];
                 break;
             default:
                 console.log("qrTarget-parameter " + target + " did not match!");
-                // do nothing
-         }
+            // do nothing
+        }
     }
 })()
