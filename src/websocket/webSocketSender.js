@@ -1,5 +1,6 @@
 import {log} from '../util/log';
 
+/* eslint eqeqeq: "off" */
 const _waitForOpen = (socket, resolve) => {
     if(socket.readyState == 0) {
         log.info("state: " + socket.readyState);

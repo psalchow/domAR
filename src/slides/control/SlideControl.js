@@ -67,6 +67,13 @@ class SlideControl {
         }
     }
 
+    getObject(slideId) {
+        const config = this.configs[slideId];
+        if(_.isObject(config)) {
+            return config.object;
+        }
+    }
+
     getAllObjects() {
         const allObjects = _.map(this.configs, 'object');
         return allObjects;
@@ -148,6 +155,27 @@ class SlideControl {
     moveOffsetOnAllSlides(offset) {
         const allObjects = this.getAllObjects();
         arTransform.allMoveOffset(allObjects, this.TWEEN, offset);
+    }
+
+    moveToAbsolutePosition(slideId, position) {
+        const object = this.getObject(slideId);
+        if(_.isObject(object)) {
+            arTransform.moveTo(object, position, object.rotation, this.TWEEN);
+        }
+    }
+
+    moveToAbsoluteRotation(slideId, rotation) {
+        const object = this.getObject(slideId);
+        if(_.isObject(object)) {
+            arTransform.moveTo(object, object.position, rotation, this.TWEEN);
+        }
+    }
+
+    moveToAbsolutePositionRotation(slideId, position, rotation) {
+        const object = this.getObject(slideId);
+        if(_.isObject(object)) {
+            arTransform.moveTo(object, position, rotation, this.TWEEN);
+        }
     }
 
     backSlide(sendStatusFunction) {

@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 import {log} from '../util/log';
 import {setArPositionRotation, TYPE_RING} from '../ar/arPositions';
 import {init} from '../ar/argonApp';
-import {CommandHub, connect} from './control/commandHub';
+import {connect} from './control/commandHub';
 import {executeCommand, COMMAND_INIT} from './control/commandExecutor';
 import {slideControl} from './control/SlideControl';
 import * as key from './slidAR/key';

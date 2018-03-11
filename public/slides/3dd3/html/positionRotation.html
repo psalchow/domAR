@@ -1,0 +1,50 @@
+<style>
+
+    #positionRotation {
+        border-width: 1px;
+        background-color: lightgray;
+    }
+
+</style>
+
+<div class="slidecounter"></div>
+<div class="code"></div>
+
+<script>
+
+    /* global slidAR */
+
+    (function () {
+        if(slidAR.slidarGlobal.withAr) {
+            const position = slidAR.positionRotation.getPosition("positionRotation");
+            const rotation = slidAR.positionRotation.getRotation("positionRotation");
+
+            const posString = "x: " + Math.round(position.x) +
+                ", <br>y: " + Math.round(position.y) +
+                ", <br>z: " + Math.round(position.z);
+
+            const initialTooltipStep = slidAR.tooltip.createPtStepWithReverse(posString, "#positionRotation", slidAR.tooltip.TOP);
+            const codeStep1 = slidAR.showCode.jsStepWithReverse("#positionRotation .code",
+                "new TWEEN.Tween(slide.position)\n" +
+                "            .to({x: 5000}, 1000)\n" +
+                "            .easing(TWEEN.Easing.Exponential.InOut)\n" +
+                "            .start();");
+
+            const positionXStep = slidAR.positionRotation.toPositionStepWithReverse("positionRotation", {
+                x: 5000, y: position.y, z: position.z
+            })
+
+            slidAR.steps.set("positionRotation", [
+                initialTooltipStep.step,
+                codeStep1.step,
+                positionXStep.step,
+            ]);
+        }
+        else {
+            console.log('This slide only works in AR mode');
+            slidAR.showCode.js("#positionRotation .code", "console.log('This slide only works in AR mode')");
+        }
+
+    })()
+
+</script>

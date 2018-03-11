@@ -21,6 +21,7 @@ export const init = async (rootSelector, selectedFilename) => {
         slidesUtil.createSlide(createFct, "graph", selectedFilename),
         slidesUtil.createSlide(createFct, "backAndFront", selectedFilename),
         slidesUtil.createSlide(createFct, "argon", selectedFilename),
+        slidesUtil.createSlide(createFct, "positionRotation", selectedFilename),
     ])
 
     if(_.isEmpty(selectedFilename)) {

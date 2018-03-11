@@ -21,6 +21,20 @@ export const moveToPosition = (type, pageId, i, totalNum, positionFunction) => {
         })
 }
 
+export const moveToAbsolutePosition = (pageId, newPosition) => {
+    d3.selectAll("#" + pageId)
+        .each(function(d) {
+            moveTo(d.object, newPosition, d.object.rotation, getTween());
+        })
+}
+
+export const moveToAbsoluteRotation = (pageId, newRotation) => {
+    d3.selectAll("#" + pageId)
+        .each(function(d) {
+            moveTo(d.object, d.object.position, newRotation, getTween());
+        })
+}
+
 const nextPosition = (pageId) => {
     d3.selectAll("#" + pageId)
         .each(function(d) {
