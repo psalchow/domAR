@@ -24,20 +24,55 @@
                 ", <br>z: " + Math.round(position.z);
 
             const initialTooltipStep = slidAR.tooltip.createPtStepWithReverse(posString, "#positionRotation", slidAR.tooltip.TOP);
-            const codeStep1 = slidAR.showCode.jsStepWithReverse("#positionRotation .code",
+
+            const codeStepX = slidAR.showCode.jsStepWithReverse("#positionRotation .code",
                 "new TWEEN.Tween(slide.position)\n" +
                 "            .to({x: 5000}, 1000)\n" +
                 "            .easing(TWEEN.Easing.Exponential.InOut)\n" +
                 "            .start();");
 
-            const positionXStep = slidAR.positionRotation.toPositionStepWithReverse("positionRotation", {
-                x: 5000, y: position.y, z: position.z
-            })
+            const positionXStep = slidAR.positionRotation.toPositionStepWithReverse("positionRotation", {x: 5000})
+
+            const codeStepY = slidAR.showCode.jsStepWithReverse("#positionRotation .code",
+                "new TWEEN.Tween(slide.position)\n" +
+                "            .to({y: 5000}, 1000)\n" +
+                "            .easing(TWEEN.Easing.Exponential.InOut)\n" +
+                "            .start();");
+
+            const positionYStep = slidAR.positionRotation.toPositionStepWithReverse("positionRotation", {y: 5000})
+
+            const codeStepZ1 = slidAR.showCode.jsStepWithReverse("#positionRotation .code",
+                "new TWEEN.Tween(slide.position)\n" +
+                "            .to({z: 50000}, 1000)\n" +
+                "            .easing(TWEEN.Easing.Exponential.InOut)\n" +
+                "            .start();");
+
+            const positionZ1Step = slidAR.positionRotation.toPositionStepWithReverse("positionRotation", {z: 50000})
+
+            const codeStepZ2 = slidAR.showCode.jsStepWithReverse("#positionRotation .code",
+                "new TWEEN.Tween(slide.position)\n" +
+                "            .to({z: -1870}, 1000)\n" +
+                "            .easing(TWEEN.Easing.Exponential.InOut)\n" +
+                "            .start();");
+
+            const positionZ2Step = slidAR.positionRotation.toPositionStepWithReverse("positionRotation", {z: -1870})
 
             slidAR.steps.set("positionRotation", [
                 initialTooltipStep.step,
-                codeStep1.step,
+                codeStepX.step,
                 positionXStep.step,
+                positionXStep.reverseStep,
+                codeStepX.reverseStep,
+                codeStepY.step,
+                positionYStep.step,
+                positionYStep.reverseStep,
+                codeStepY.reverseStep,
+                codeStepZ1.step,
+                positionZ1Step.step,
+                positionZ1Step.reverseStep,
+                codeStepZ1.reverseStep,
+                codeStepZ2.step,
+                positionZ2Step.step,
             ]);
         }
         else {

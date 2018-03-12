@@ -1,16 +1,32 @@
+import * as _ from 'lodash';
+
 import {slideControl} from '../control/SlideControl';
 import {createReverseStep} from './steps';
 
 const toPosition = (slideId, newPosition) => {
-    slideControl.moveToAbsolutePosition(slideId, newPosition);
+    const currentPosition = getPosition(slideId);
+
+    const x = _.isUndefined(newPosition.x) ? currentPosition.x : newPosition.x;
+    const y = _.isUndefined(newPosition.y) ? currentPosition.y : newPosition.y;
+    const z = _.isUndefined(newPosition.z) ? currentPosition.z : newPosition.z;
+
+    slideControl.moveToAbsolutePosition(slideId, {x, y, z});
+
+    return currentPosition;
 }
 
 const toPositionStepWithReverse = (slideId, newPosition) => {
-    const currentPosition = getPosition(slideId);
-
     const step = {
-        f: () => toPosition(slideId, newPosition),
-        b: () => toPosition(slideId, currentPosition)
+        currentPosition: undefined,
+        f: () => {
+            if(_.isUndefined(this.currentPosition)) {
+                this.currentPosition = getPosition(slideId);
+            }
+            toPosition(slideId, newPosition)
+        },
+        b: () => {
+            toPosition(slideId, this.currentPosition)
+        }
     }
 
     return createReverseStep(step);
