@@ -15,7 +15,7 @@ import * as hudUtil from "../ar/hudUtil";
 
 window.slidAR = slidAR;
 
-const TWEEN = require('@tweenjs/tween.js');
+const TWEEN = window.TWEEN;
 slideControl.setTWEEN(TWEEN);
 
 const startSlideShow = (slideShowIntervalInSeconds) => {

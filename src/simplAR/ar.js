@@ -4,7 +4,8 @@ import {init} from '../ar/argonApp';
 import * as global from './global';
 import * as setPositions from './setPositions';
 
-const TWEEN = require('@tweenjs/tween.js');
+const TWEEN = window.TWEEN;
+
 
 export const initAr = () => {
     if(_.isEmpty(global.getGlobalRoot()) || _.isEmpty(global.getGlobalApp())) {
