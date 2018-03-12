@@ -40,18 +40,6 @@ const toPositionRotation = (slideId, newPosition, newRotation) => {
     slideControl.moveToAbsolutePositionRotation(slideId, newPosition, newRotation);
 }
 
-const addToPositionRotation = (slideId, addPosition, addRotation) => {
-    const object = slideControl.getObject(slideId);
-
-    object.position.x += addPosition.x;
-    object.position.y += addPosition.y;
-    object.position.z += addPosition.z;
-
-    object.rotation.x += addRotation.x;
-    object.rotation.y += addRotation.y;
-    object.rotation.z += addRotation.z;
-}
-
 const getPosition = (slideId) => {
     const position = slideControl.getObject(slideId).position;
     return {...position};
@@ -65,6 +53,5 @@ const getRotation = (slideId) => {
 export const positionRotation = {
     toPosition, toRotation, toPositionRotation,
     toPositionStepWithReverse,
-    addToPositionRotation,
     getPosition, getRotation
 }
