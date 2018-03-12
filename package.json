@@ -37,6 +37,8 @@
     "lodash": "^4.17.4",
     "loglevel": "^1.6.1",
     "materialize-css": "^0.100.2",
+    "moment": "^2.21.0",
+    "node-fetch": "^2.1.1",
     "object-assign": "4.1.1",
     "opentype.js": "^0.7.3",
     "postcss-flexbugs-fixes": "3.2.0",
