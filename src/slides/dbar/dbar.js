@@ -20,7 +20,9 @@ export const init = async (rootSelector, selectedFilename) => {
         slidesUtil.createSlide(createFct, "cube", selectedFilename),
         slidesUtil.createSlide(createFct, "graph", selectedFilename),
         slidesUtil.createSlide(createFct, "backAndFront", selectedFilename),
+        slidesUtil.createSlide(createFct, "argontitle", selectedFilename),
         slidesUtil.createSlide(createFct, "argon", selectedFilename),
+        slidesUtil.createSlide(createFct, "threejstitle", selectedFilename),
         slidesUtil.createSlide(createFct, "positionRotation", selectedFilename),
     ])
 

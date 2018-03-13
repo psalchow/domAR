@@ -47,7 +47,8 @@
             case "stocks":
                 window._pages = [
                     {id: "html1", name: "stocks/html1.html"},
-                    {id: "html2", name: "stocks/html2.html"}
+                    {id: "html2", name: "stocks/html2.html"},
+                    {id: "html3", name: "stocks/html3.html"}
                 ];
                 break;
             default:

@@ -5,6 +5,24 @@ const request = require("request");
 
 const {WebSocketServer} = require('./WebSocketServer');
 
+const DEFAULT_INTERVAL = 1000 * 5 * 60; // 5 min
+const ERROR_FALLBACK_INTERVAL = 1000 * 10;
+
+const customers = [
+    {
+        key: "DLAKF",
+        company: "Deutsche Lufthansa AG"
+    },
+    {
+        key: "MSFT",
+        company: "Microsoft Corporation"
+    },
+    {
+        key: "PBSFF",
+        company: "ProsiebenSat.1 Media SE"
+    }
+];
+
 function startServer() {
     const httpPort = process.argv[3] || 1338;
     const folder = process.argv[2] || 'build';
@@ -25,7 +43,7 @@ function startWebSocketServer() {
 
     webSocketServer.onMessageCallback = (messaqeString) => {
         webSocketServer.sendStringToAllSockets(messaqeString);
-    }
+    };
 
     webSocketServer.connect(webSocketPort);
 }
@@ -39,23 +57,14 @@ function fetchRemoteApi(url) {
     });
 }
 
-async function sendStockPrices() {
+function getUrl(customerKey) {
+    return "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol="
+        + customerKey + "&interval=5min&apikey=NJLAVFTJ4P80CEWR&datatype=json"
+}
 
-    // TODO: use an exisiting websocket instead of creating a new one (see code.js file)
-    const webSocketPort = process.argv[4] || 1337;
-    const webSocketServer = new WebSocketServer();
-    webSocketServer.connect(webSocketPort);
-
-    const stockPrices = [];
-
-    // TODO move to config-map or something similar
-    const lufthansaStock = "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=DLAKF&interval=5min&apikey=NJLAVFTJ4P80CEWR&datatype=json"
-
+function createStockDto(customer, index, jsonData) {
     try {
-        // TODO put these lines into a separate function
-        const result = await fetchRemoteApi(lufthansaStock);
-
-        const stockValue = JSON.parse(result);
+        const stockValue = JSON.parse(jsonData);
         const symbol = stockValue["Meta Data"]["2. Symbol"];
         const lastRefreshed = stockValue["Meta Data"]["3. Last Refreshed"];
         const currentValue = stockValue["Time Series (5min)"];
@@ -66,19 +75,26 @@ async function sendStockPrices() {
             let key = obj;
             let val = currentValue[key];
 
-            lastValues.push(val["1. open"]);
-
-            if (i >= 1)
-                break;
-            i++;
+            switch (i) {
+                case 0:
+                    lastValues.push(val["2. high"]);
+                    i++;
+                    break;
+                case 1:
+                    lastValues.push(val["3. low"]);
+                    i++;
+                    break;
+                default:
+                    break;
+            }
         }
 
         const shift = parseFloat(lastValues[0]) - parseFloat(lastValues[1]);
         const trend = (parseFloat(lastValues[0]) / parseFloat(lastValues[1])) * 100 - 100;
 
-        const returnValue = {
-            id: 1,
-            company: "Deutsche Lufthansa AG",
+        return {
+            id: index + 1,
+            company: customer.key + " (" + customer.company + ")",
             abbr: symbol,
             updated: moment(lastRefreshed).locale("de").format("DD.MMMM YYYY"),
             value: {
@@ -88,22 +104,45 @@ async function sendStockPrices() {
             shift: shift.toFixed(2),
             trend: trend.toFixed(2)
         };
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}
 
-        stockPrices.push(returnValue);
 
+async function loadStockData() {
+    const stockPrices = [];
+
+    try {
+        customers.map(async (customer, index) => {
+            const result = await fetchRemoteApi(getUrl(customer.key));
+            const stockDto = createStockDto(customer, index, result);
+            stockPrices.push(stockDto);
+        })
     } catch (error) {
         console.error(error);
     }
 
-    let i = 0;
-    setInterval(() => {
-        if (stockPrices.length > 0) {
-            console.log("Sending ... " + i++);
-            webSocketServer.sendObjectToAllSockets(stockPrices[0]) // TODO send multiple stock data objects
-        } else {
-            throw new Error("invalid stock object. please restart node server") // TODO refetch on error
+    return stockPrices;
+}
+
+async function sendStockPrices() {
+    // TODO: use an exisiting websocket instead of creating a new one (see code.js file)
+    const webSocketPort = process.argv[4] || 1337;
+    const webSocketServer = new WebSocketServer();
+    webSocketServer.connect(webSocketPort);
+
+    let stockPrices = await loadStockData();
+
+    // TODO enable auto updates
+    setInterval(async () => {
+        // let stockPrices = await loadStockData();
+        if (!stockPrices.includes(null)) {
+            console.log("Sending ... ");
+            webSocketServer.sendObjectToAllSockets(stockPrices)
         }
-    }, 1000 * 5)
+    }, 1000 * 5);
 }
 
 startServer();

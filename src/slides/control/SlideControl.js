@@ -1,5 +1,6 @@
 import * as _ from 'lodash';
 import * as $ from 'jquery';
+import * as d3 from 'd3';
 
 import {log} from '../../util/log';
 import * as fct from '../../util/fct';
@@ -193,8 +194,20 @@ class SlideControl {
         }
     }
 
+    unactive() {
+        d3.selectAll("#" + this.currentSlideId)
+            .classed("activeslide", false)
+    }
+
+    active() {
+        d3.selectAll("#" + this.currentSlideId)
+            .classed("activeslide", true)
+    }
+
     setCurrentSlideId(slideId) {
+        this.unactive();
         this.currentSlideId = slideId;
+        this.active();
     }
 
     addSlideId(slideId) {
@@ -205,13 +218,13 @@ class SlideControl {
     shiftForwardCurrentSlideId() {
         const currentIndex = this.slideIds.indexOf(this.currentSlideId);
         const nextIndex = currentIndex >= this.slideIds.length - 1 ? 0 : currentIndex+1;
-        this.currentSlideId = this.slideIds[nextIndex];
+        this.setCurrentSlideId(this.slideIds[nextIndex]);
     }
 
     shiftBackwardCurrentSlideId() {
         const currentIndex = this.slideIds.indexOf(this.currentSlideId);
         const nextIndex = currentIndex <= 0 ? this.slideIds.length - 1 : currentIndex-1;
-        this.currentSlideId = this.slideIds[nextIndex];
+        this.setCurrentSlideId(this.slideIds[nextIndex]);
     }
 
     setStepsObject(slideId, steps, stepNumber = 0) {
