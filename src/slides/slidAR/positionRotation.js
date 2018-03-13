@@ -50,7 +50,6 @@ const toRotationStepWithReverse = (slideId, newRotation) => {
         f: () => {
             if(_.isUndefined(this.currentRotation)) {
                 const cr = getRotation(slideId);
-                debugger
                 this.currentRotation.x = cr._x;
                 this.currentRotation.y = cr._y;
                 this.currentRotation.z = cr._z;
