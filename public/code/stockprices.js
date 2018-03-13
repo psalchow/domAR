@@ -44,19 +44,24 @@
 
     function receiveMessages() {
         function onMessage(messageString) {
-            // TODO receive and handle more than one data object
-            const value = JSON.parse(messageString);
+            const received = JSON.parse(messageString);
 
-            const updated = value.updated;
-            const trend = (value.trend > 0) ? "+ " + value.trend : "- " + value.trend;
-            const amount = value.value.amount + " " + value.value.currency;
+            try {
+            received.map((element) => {
+                const updated = element.updated;
+                const trend = element.trend;
+                const amount = element.value.amount + " " + element.value.currency;
 
-            document.getElementById("updated").innerHTML = updated;
-            document.getElementById("value").innerHTML = amount;
-            document.getElementById("shift").innerHTML = value.shift;
-            document.getElementById("shift").style.cssText = value.shift > 0 ? "color: green" : "color: red";
-            document.getElementById("trend").innerHTML = trend + " %";
-            document.getElementById("trend").style.cssText = value.trend > 0 ? "color: green" : "color: red";
+                document.getElementById("company-" + element.id).innerHTML = element.company;
+                document.getElementById("updated-" + element.id).innerHTML = updated;
+                document.getElementById("value-" + element.id).innerHTML = amount;
+                document.getElementById("shift-" + element.id).innerHTML = element.shift;
+                document.getElementById("shift-" + element.id).style.cssText = element.shift > 0 ? "color: green" : "color: red";
+                document.getElementById("trend-" + element.id).innerHTML = trend + " %";
+                document.getElementById("trend-" + element.id).style.cssText = element.trend > 0 ? "color: green" : "color: red";
+            })} catch(error) {
+                console.log(error);
+            }
         }
 
         simplAR.connect(onMessage);

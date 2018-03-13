@@ -5,6 +5,21 @@ const request = require("request");
 
 const {WebSocketServer} = require('./WebSocketServer');
 
+const customers = [
+    {
+        key: "DLAKF",
+        company: "Deutsche Lufthansa AG"
+    },
+    {
+        key: "MSFT",
+        company: "Microsoft Corporation"
+    },
+    {
+        key: "PBSFF",
+        company: "ProsiebenSat.1 Media SE"
+    }
+];
+
 function startServer() {
     const httpPort = process.argv[3] || 1338;
     const folder = process.argv[2] || 'build';
@@ -25,7 +40,7 @@ function startWebSocketServer() {
 
     webSocketServer.onMessageCallback = (messaqeString) => {
         webSocketServer.sendStringToAllSockets(messaqeString);
-    }
+    };
 
     webSocketServer.connect(webSocketPort);
 }
@@ -39,6 +54,58 @@ function fetchRemoteApi(url) {
     });
 }
 
+function createStockDto(customer, index, jsonData) {
+    const stockValue = JSON.parse(jsonData);
+    const symbol = stockValue["Meta Data"]["2. Symbol"];
+    const lastRefreshed = stockValue["Meta Data"]["3. Last Refreshed"];
+    const currentValue = stockValue["Time Series (5min)"];
+
+    const lastValues = [];
+    let i = 0;
+    for (obj in currentValue) {
+        let key = obj;
+        let val = currentValue[key];
+
+        switch (i) {
+            case 0:
+                lastValues.push(val["2. high"]);
+                i++;
+                break;
+            case 1:
+                lastValues.push(val["3. low"]);
+                i++;
+                break;
+            default:
+                break;
+        }
+    }
+
+    const shift = parseFloat(lastValues[0]) - parseFloat(lastValues[1]);
+    const trend = (parseFloat(lastValues[0]) / parseFloat(lastValues[1])) * 100 - 100;
+
+    return {
+        id: index + 1,
+        company: customer.key + " (" + customer.company + ")",
+        abbr: symbol,
+        updated: moment(lastRefreshed).locale("de").format("DD.MMMM YYYY"),
+        value: {
+            amount: parseFloat(lastValues[0]).toFixed(2),
+            currency: "$"
+        },
+        shift: shift.toFixed(2),
+        trend: trend.toFixed(2)
+    };
+}
+
+function getUrl(customerKey) {
+    return "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol="
+        + customerKey + "&interval=5min&apikey=NJLAVFTJ4P80CEWR&datatype=json"
+}
+
+function loadStockData() {
+
+}
+
 async function sendStockPrices() {
 
     // TODO: use an exisiting websocket instead of creating a new one (see code.js file)
@@ -48,60 +115,25 @@ async function sendStockPrices() {
 
     const stockPrices = [];
 
-    // TODO move to config-map or something similar
-    const lufthansaStock = "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=DLAKF&interval=5min&apikey=NJLAVFTJ4P80CEWR&datatype=json"
-
     try {
-        // TODO put these lines into a separate function
-        const result = await fetchRemoteApi(lufthansaStock);
-
-        const stockValue = JSON.parse(result);
-        const symbol = stockValue["Meta Data"]["2. Symbol"];
-        const lastRefreshed = stockValue["Meta Data"]["3. Last Refreshed"];
-        const currentValue = stockValue["Time Series (5min)"];
-
-        const lastValues = [];
-        let i = 0;
-        for (obj in currentValue) {
-            let key = obj;
-            let val = currentValue[key];
-
-            lastValues.push(val["1. open"]);
-
-            if (i >= 1)
-                break;
-            i++;
-        }
-
-        const shift = parseFloat(lastValues[0]) - parseFloat(lastValues[1]);
-        const trend = (parseFloat(lastValues[0]) / parseFloat(lastValues[1])) * 100 - 100;
-
-        const returnValue = {
-            id: 1,
-            company: "Deutsche Lufthansa AG",
-            abbr: symbol,
-            updated: moment(lastRefreshed).locale("de").format("DD.MMMM YYYY"),
-            value: {
-                amount: parseFloat(lastValues[0]).toFixed(2),
-                currency: "$"
-            },
-            shift: shift.toFixed(2),
-            trend: trend.toFixed(2)
-        };
-
-        stockPrices.push(returnValue);
-
+        customers.map(async (customer, index) => {
+            const result = await fetchRemoteApi(getUrl(customer.key));
+            const stockDto = createStockDto(customer, index, result);
+            stockPrices.push(stockDto);
+        })
     } catch (error) {
         console.error(error);
     }
 
-    let i = 0;
     setInterval(() => {
         if (stockPrices.length > 0) {
-            console.log("Sending ... " + i++);
-            webSocketServer.sendObjectToAllSockets(stockPrices[0]) // TODO send multiple stock data objects
+            console.log("Sending ... ");
+            webSocketServer.sendObjectToAllSockets(stockPrices)
         } else {
-            throw new Error("invalid stock object. please restart node server") // TODO refetch on error
+            console.log("Sending DUMMY data ... ");
+            webSocketServer.sendObjectToAllSockets(stockPrices)
+            console.error("Invalid stock object.");
+            // throw new Error("Invalid stock object. please restart node server") // TODO refetch on error
         }
     }, 1000 * 5)
 }
