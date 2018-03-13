@@ -20,6 +20,7 @@ class SlideControl {
 
     setTWEEN(TWEEN) {
         this.TWEEN = TWEEN;
+        slidarGlobal.TWEEN = TWEEN;
     }
 
     getNumberOfSlides() {

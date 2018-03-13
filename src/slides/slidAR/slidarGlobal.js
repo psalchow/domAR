@@ -1,5 +1,6 @@
 export const slidarGlobal = {
     withAr: undefined,
     isMaster: undefined,
-    socket: undefined
+    socket: undefined,
+    TWEEN: undefined
 }

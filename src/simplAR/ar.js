@@ -3,6 +3,7 @@ import * as _ from 'lodash';
 import {init} from '../ar/argonApp';
 import * as global from './global';
 import * as setPositions from './setPositions';
+import * as moveObject from './moveObject';
 
 const TWEEN = window.TWEEN;
 
@@ -26,5 +27,6 @@ export const initTween = () => {
 export const ar = {
     initAr,
     initTween,
-    ...setPositions
+    ...setPositions,
+    ...moveObject
 }

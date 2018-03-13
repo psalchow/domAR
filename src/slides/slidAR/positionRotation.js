@@ -2,29 +2,17 @@ import * as _ from 'lodash';
 
 import {slideControl} from '../control/SlideControl';
 import {createReverseStep} from './steps';
-
-const setXYZ = (newXYZ, currentXYZ) => {
-    const x = _.isUndefined(newXYZ.x) ? currentXYZ.x : newXYZ.x;
-    const y = _.isUndefined(newXYZ.y) ? currentXYZ.y : newXYZ.y;
-    const z = _.isUndefined(newXYZ.z) ? currentXYZ.z : newXYZ.z;
-
-    return {x, y, z}
-}
+import {slidarGlobal} from './slidarGlobal';
+import * as move from '../../ar/move';
 
 const toPosition = (slideId, newPosition) => {
-    const currentPosition = getPosition(slideId);
-
-    slideControl.moveToAbsolutePosition(slideId, setXYZ(newPosition, currentPosition));
-
-    return currentPosition;
+    const object = slideControl.getObject(slideId);
+    return move.toPosition(object, newPosition, slidarGlobal.TWEEN)
 }
 
 const toRotation = (slideId, newRotation) => {
-    const currentRotation = getRotation(slideId);
-
-    slideControl.moveToAbsoluteRotation(slideId, setXYZ(newRotation, currentRotation));
-
-    return currentRotation;
+    const object = slideControl.getObject(slideId);
+    return move.toRotation(object, newRotation, slidarGlobal.TWEEN)
 }
 
 const toPositionStepWithReverse = (slideId, newPosition) => {
