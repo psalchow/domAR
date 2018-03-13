@@ -16,19 +16,38 @@
 
     (function () {
         if(slidAR.slidarGlobal.withAr) {
-            const position = slidAR.positionRotation.getPosition("positionRotation");
-            const rotation = slidAR.positionRotation.getRotation("positionRotation");
 
-            const posString = "<b>POSITION</b><br>x: " + Math.round(position.x) +
-                ", <br>y: " + Math.round(position.y) +
-                ", <br>z: " + Math.round(position.z);
+            const ttPos = function() {
+                const position = slidAR.positionRotation.getPosition("positionRotation");
+                const posString = "<b>POSITION</b><br>x: " + Math.round(position.x) +
+                    ", <br>y: " + Math.round(position.y) +
+                    ", <br>z: " + Math.round(position.z);
+                slidAR.tooltip.createPt(posString, "#positionRotation", slidAR.tooltip.TOP);
+            }
 
-            const rotString = "<b>ROTATION</b><br>x: " + slidAR.math.round(rotation._x, 2) +
-                ", <br>y: " + slidAR.math.round(rotation._y, 2) +
-                ", <br>z: " + slidAR.math.round(rotation._z, 2);
+            const _ttPosStep = {
+                f: ttPos,
+                b: function () {
+                    slidAR.tooltip.removePt("#positionRotation")
+                }
+            }
+            const ttPosStep = slidAR.steps.createReverseStep(_ttPosStep);
 
-            const tooltipPositionStep = slidAR.tooltip.createPtStepWithReverse(posString, "#positionRotation", slidAR.tooltip.TOP);
-            const tooltipRotationStep = slidAR.tooltip.createPtStepWithReverse(rotString, "#positionRotation", slidAR.tooltip.BOTTOM);
+            const ttRot = function () {
+                const rotation = slidAR.positionRotation.getRotation("positionRotation");
+                const rotString = "<b>ROTATION</b><br>x: " + slidAR.math.round(rotation.x, 2) +
+                    ", <br>y: " + slidAR.math.round(rotation.y, 2) +
+                    ", <br>z: " + slidAR.math.round(rotation.z, 2);
+                slidAR.tooltip.createPt(rotString, "#positionRotation", slidAR.tooltip.BOTTOM);
+            }
+
+            const _ttRotStep = {
+                f: ttRot,
+                b: function() {
+                    slidAR.tooltip.removePt("#positionRotation")
+                }
+            }
+            const ttRotStep = slidAR.steps.createReverseStep(_ttRotStep);
 
             const codeStepX = slidAR.showCode.jsStepWithReverse("#positionRotation .code",
                 "new TWEEN.Tween(threeCss3dObject.position)\n" +
@@ -56,22 +75,38 @@
 
             const codeStepZ2 = slidAR.showCode.jsStepWithReverse("#positionRotation .code",
                 "new TWEEN.Tween(threeCss3dObject.position)\n" +
-                "            .to({z: -1870}, 1000)\n" +
+                "            .to({z: -3000}, 1000)\n" +
                 "            .easing(TWEEN.Easing.Exponential.InOut)\n" +
                 "            .start();");
 
-            const positionZ2Step = slidAR.positionRotation.toPositionStepWithReverse("positionRotation", {z: -1870})
+            const positionZ2Step = slidAR.positionRotation.toPositionStepWithReverse("positionRotation", {z: -3000})
 
-            const codeStepRot = slidAR.showCode.jsStepWithReverse("#positionRotation .code",
+            const codeStepRotX = slidAR.showCode.jsStepWithReverse("#positionRotation .code",
                 "new TWEEN.Tween(threeCss3dObject.rotation)\n" +
-                "            .to({x: 0, y: 0, z: 0}, 1000)\n" +
+                "            .to({x: 0}, 1000)\n" +
                 "            .easing(TWEEN.Easing.Exponential.InOut)\n" +
                 "            .start();");
 
-            const rotationStep = slidAR.positionRotation.toRotationStepWithReverse("positionRotation", {x: 0, y:0, z: 0})
+            const rotationStepX = slidAR.positionRotation.toRotationStepWithReverse("positionRotation", {x: 0})
+
+            const codeStepRotY = slidAR.showCode.jsStepWithReverse("#positionRotation .code",
+                "new TWEEN.Tween(threeCss3dObject.rotation)\n" +
+                "            .to({y: Math.PI}, 1000)\n" +
+                "            .easing(TWEEN.Easing.Exponential.InOut)\n" +
+                "            .start();");
+
+            const rotationStepY = slidAR.positionRotation.toRotationStepWithReverse("positionRotation", {y: Math.PI})
+
+            const codeStepRotZ = slidAR.showCode.jsStepWithReverse("#positionRotation .code",
+                "new TWEEN.Tween(threeCss3dObject.rotation)\n" +
+                "            .to({z: 0}, 1000)\n" +
+                "            .easing(TWEEN.Easing.Exponential.InOut)\n" +
+                "            .start();");
+
+            const rotationStepZ = slidAR.positionRotation.toRotationStepWithReverse("positionRotation", {z: 0})
 
             slidAR.steps.set("positionRotation", [
-                tooltipPositionStep.step,
+                ttPosStep.step,
                 codeStepX.step,
                 positionXStep.step,
                 positionXStep.reverseStep,
@@ -88,9 +123,17 @@
                 positionZ2Step.step,
                 positionZ2Step.reverseStep,
                 codeStepZ2.reverseStep,
-                tooltipRotationStep.step,
-                codeStepRot.step,
-                rotationStep.step
+                ttRotStep.step,
+                codeStepRotX.step,
+                rotationStepX.step,
+                rotationStepX.reverseStep,
+                codeStepRotX.reverseStep,
+                codeStepRotY.step,
+                rotationStepY.step,
+                rotationStepY.reverseStep,
+                codeStepRotY.reverseStep,
+                codeStepRotZ.step,
+                rotationStepZ.step,
             ]);
         }
         else {

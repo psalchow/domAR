@@ -71,5 +71,6 @@ export const steps = {
     set,
     createReverseStep,
     combineSteps,
-    combine2StepsDelayed
+    combine2StepsDelayed,
+    createReverseStep
 }

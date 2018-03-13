@@ -29,7 +29,6 @@ const toRotation = (slideId, newRotation) => {
 
 const toPositionStepWithReverse = (slideId, newPosition) => {
     const step = {
-        currentPosition: undefined,
         f: () => {
             if(_.isUndefined(this.currentPosition)) {
                 this.currentPosition = getPosition(slideId);
@@ -46,14 +45,13 @@ const toPositionStepWithReverse = (slideId, newPosition) => {
 
 const toRotationStepWithReverse = (slideId, newRotation) => {
     const step = {
-        currentRotation: {},
         f: () => {
             if(_.isUndefined(this.currentRotation)) {
                 const cr = getRotation(slideId);
-                debugger
-                this.currentRotation.x = cr._x;
-                this.currentRotation.y = cr._y;
-                this.currentRotation.z = cr._z;
+                this.currentRotation = {};
+                this.currentRotation.x = cr.x;
+                this.currentRotation.y = cr.y;
+                this.currentRotation.z = cr.z;
             }
             toRotation(slideId, newRotation)
         },
@@ -70,13 +68,15 @@ const toPositionRotation = (slideId, newPosition, newRotation) => {
 }
 
 const getPosition = (slideId) => {
-    const position = slideControl.getObject(slideId).position;
-    return {...position};
+    const object = slideControl.getObject(slideId);
+    const {x, y, z} = object.position;
+    return {x, y, z};
 }
 
 const getRotation = (slideId) => {
-    const rotation = slideControl.getObject(slideId).rotation;
-    return {...rotation};
+    const object = slideControl.getObject(slideId);
+    const {x, y, z} = object.rotation;
+    return {x, y, z};
 }
 
 export const positionRotation = {
