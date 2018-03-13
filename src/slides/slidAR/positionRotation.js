@@ -3,16 +3,28 @@ import * as _ from 'lodash';
 import {slideControl} from '../control/SlideControl';
 import {createReverseStep} from './steps';
 
+const setXYZ = (newXYZ, currentXYZ) => {
+    const x = _.isUndefined(newXYZ.x) ? currentXYZ.x : newXYZ.x;
+    const y = _.isUndefined(newXYZ.y) ? currentXYZ.y : newXYZ.y;
+    const z = _.isUndefined(newXYZ.z) ? currentXYZ.z : newXYZ.z;
+
+    return {x, y, z}
+}
+
 const toPosition = (slideId, newPosition) => {
     const currentPosition = getPosition(slideId);
 
-    const x = _.isUndefined(newPosition.x) ? currentPosition.x : newPosition.x;
-    const y = _.isUndefined(newPosition.y) ? currentPosition.y : newPosition.y;
-    const z = _.isUndefined(newPosition.z) ? currentPosition.z : newPosition.z;
-
-    slideControl.moveToAbsolutePosition(slideId, {x, y, z});
+    slideControl.moveToAbsolutePosition(slideId, setXYZ(newPosition, currentPosition));
 
     return currentPosition;
+}
+
+const toRotation = (slideId, newRotation) => {
+    const currentRotation = getRotation(slideId);
+
+    slideControl.moveToAbsoluteRotation(slideId, setXYZ(newRotation, currentRotation));
+
+    return currentRotation;
 }
 
 const toPositionStepWithReverse = (slideId, newPosition) => {
@@ -32,8 +44,25 @@ const toPositionStepWithReverse = (slideId, newPosition) => {
     return createReverseStep(step);
 }
 
-const toRotation = (slideId, newRotation) => {
-    slideControl.moveToAbsoluteRotation(slideId, newRotation);
+const toRotationStepWithReverse = (slideId, newRotation) => {
+    const step = {
+        currentRotation: {},
+        f: () => {
+            if(_.isUndefined(this.currentRotation)) {
+                const cr = getRotation(slideId);
+                debugger
+                this.currentRotation.x = cr._x;
+                this.currentRotation.y = cr._y;
+                this.currentRotation.z = cr._z;
+            }
+            toRotation(slideId, newRotation)
+        },
+        b: () => {
+            toRotation(slideId, this.currentRotation)
+        }
+    }
+
+    return createReverseStep(step);
 }
 
 const toPositionRotation = (slideId, newPosition, newRotation) => {
@@ -53,5 +82,6 @@ const getRotation = (slideId) => {
 export const positionRotation = {
     toPosition, toRotation, toPositionRotation,
     toPositionStepWithReverse,
+    toRotationStepWithReverse,
     getPosition, getRotation
 }

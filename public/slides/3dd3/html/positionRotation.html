@@ -19,14 +19,19 @@
             const position = slidAR.positionRotation.getPosition("positionRotation");
             const rotation = slidAR.positionRotation.getRotation("positionRotation");
 
-            const posString = "x: " + Math.round(position.x) +
+            const posString = "<b>POSITION</b><br>x: " + Math.round(position.x) +
                 ", <br>y: " + Math.round(position.y) +
                 ", <br>z: " + Math.round(position.z);
 
-            const initialTooltipStep = slidAR.tooltip.createPtStepWithReverse(posString, "#positionRotation", slidAR.tooltip.TOP);
+            const rotString = "<b>ROTATION</b><br>x: " + slidAR.math.round(rotation._x, 2) +
+                ", <br>y: " + slidAR.math.round(rotation._y, 2) +
+                ", <br>z: " + slidAR.math.round(rotation._z, 2);
+
+            const tooltipPositionStep = slidAR.tooltip.createPtStepWithReverse(posString, "#positionRotation", slidAR.tooltip.TOP);
+            const tooltipRotationStep = slidAR.tooltip.createPtStepWithReverse(rotString, "#positionRotation", slidAR.tooltip.BOTTOM);
 
             const codeStepX = slidAR.showCode.jsStepWithReverse("#positionRotation .code",
-                "new TWEEN.Tween(slide.position)\n" +
+                "new TWEEN.Tween(threeCss3dObject.position)\n" +
                 "            .to({x: 5000}, 1000)\n" +
                 "            .easing(TWEEN.Easing.Exponential.InOut)\n" +
                 "            .start();");
@@ -34,7 +39,7 @@
             const positionXStep = slidAR.positionRotation.toPositionStepWithReverse("positionRotation", {x: 5000})
 
             const codeStepY = slidAR.showCode.jsStepWithReverse("#positionRotation .code",
-                "new TWEEN.Tween(slide.position)\n" +
+                "new TWEEN.Tween(threeCss3dObject.position)\n" +
                 "            .to({y: 5000}, 1000)\n" +
                 "            .easing(TWEEN.Easing.Exponential.InOut)\n" +
                 "            .start();");
@@ -42,7 +47,7 @@
             const positionYStep = slidAR.positionRotation.toPositionStepWithReverse("positionRotation", {y: 5000})
 
             const codeStepZ1 = slidAR.showCode.jsStepWithReverse("#positionRotation .code",
-                "new TWEEN.Tween(slide.position)\n" +
+                "new TWEEN.Tween(threeCss3dObject.position)\n" +
                 "            .to({z: 50000}, 1000)\n" +
                 "            .easing(TWEEN.Easing.Exponential.InOut)\n" +
                 "            .start();");
@@ -50,15 +55,23 @@
             const positionZ1Step = slidAR.positionRotation.toPositionStepWithReverse("positionRotation", {z: 50000})
 
             const codeStepZ2 = slidAR.showCode.jsStepWithReverse("#positionRotation .code",
-                "new TWEEN.Tween(slide.position)\n" +
+                "new TWEEN.Tween(threeCss3dObject.position)\n" +
                 "            .to({z: -1870}, 1000)\n" +
                 "            .easing(TWEEN.Easing.Exponential.InOut)\n" +
                 "            .start();");
 
             const positionZ2Step = slidAR.positionRotation.toPositionStepWithReverse("positionRotation", {z: -1870})
 
+            const codeStepRot = slidAR.showCode.jsStepWithReverse("#positionRotation .code",
+                "new TWEEN.Tween(threeCss3dObject.rotation)\n" +
+                "            .to({x: 0, y: 0, z: 0}, 1000)\n" +
+                "            .easing(TWEEN.Easing.Exponential.InOut)\n" +
+                "            .start();");
+
+            const rotationStep = slidAR.positionRotation.toRotationStepWithReverse("positionRotation", {x: 0, y:0, z: 0})
+
             slidAR.steps.set("positionRotation", [
-                initialTooltipStep.step,
+                tooltipPositionStep.step,
                 codeStepX.step,
                 positionXStep.step,
                 positionXStep.reverseStep,
@@ -73,6 +86,11 @@
                 codeStepZ1.reverseStep,
                 codeStepZ2.step,
                 positionZ2Step.step,
+                positionZ2Step.reverseStep,
+                codeStepZ2.reverseStep,
+                tooltipRotationStep.step,
+                codeStepRot.step,
+                rotationStep.step
             ]);
         }
         else {
