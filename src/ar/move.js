@@ -30,12 +30,12 @@ export const toRotation = (object, newRotation, TWEEN, duration) => {
     return currentRotation;
 }
 
-const getPosition = (object) => {
+export const getPosition = (object) => {
     const {x, y, z} = object.position;
     return {x, y, z};
 }
 
-const getRotation = (object) => {
+export const getRotation = (object) => {
     const {x, y, z} = object.rotation;
     return {x, y, z};
 }

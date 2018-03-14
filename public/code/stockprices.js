@@ -67,6 +67,6 @@
         simplAR.connect(onMessage);
     }
 
-    window._start = init;
+    window._startticker = init;
 
 })();

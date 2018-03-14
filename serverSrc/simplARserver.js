@@ -71,7 +71,7 @@ function createStockDto(customer, index, jsonData) {
 
         const lastValues = [];
         let i = 0;
-        for (obj in currentValue) {
+        for (let obj in currentValue) {
             let key = obj;
             let val = currentValue[key];
 
@@ -146,5 +146,9 @@ async function sendStockPrices() {
 }
 
 startServer();
-// startWebSocketServer();
-sendStockPrices();
+if(process.argv[5] == "ticker") {
+    sendStockPrices();
+}
+else {
+    startWebSocketServer();
+}

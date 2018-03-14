@@ -42,33 +42,47 @@
 
     /* global d3 */
 
+    function changeText(number, text) {
+        var page = d3.select(".html" + number + ".title");
+
+        var divs = page.selectAll(".char.font-effect-anaglyph")
+            .data(text.split(''));
+
+        divs.enter()
+            .append("div")
+            .attr("class", "char font-effect-anaglyph")
+            .merge(divs)
+            .text(function(d) {
+                return d;
+            });
+
+        divs.exit().remove();
+    }
+
+    function sendPosition(pageId) {
+        const position = simplAR.getPosition(pageId);
+        simplAR.send(JSON.stringify(position));
+    }
+
     function receiveMessages() {
         function onMessage(messageString) {
             var parts = messageString.split(";");
             if(parts.length > 1) {
-                var number = parts[0] > 0 ? parts[0] : 1;
-                var text = String(parts[1]);
+                switch (parts[0]) {
+                    case "text":
+                        changeText(parts[1], parts[2]);
+                        break;
 
-                var page = d3.select(".html" + number + ".title");
-
-                var divs = page.selectAll(".char.font-effect-anaglyph")
-                    .data(text.split(''));
-
-                divs.enter()
-                    .append("div")
-                    .attr("class", "char font-effect-anaglyph")
-                    .merge(divs)
-                    .text(function(d) {
-                        return d;
-                    });
-
-                divs.exit().remove();
+                    case "getpos":
+                        sendPosition(parts[1]);
+                        break;
+                }
             }
         }
 
         simplAR.connect(onMessage);
     }
 
-    window._start = init;
+    window._startcode = init;
 
 })();

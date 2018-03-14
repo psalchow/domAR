@@ -1,3 +1,5 @@
+/* global simplAR */
+
 (function () {
 
     function addPathToFileneme(filename) {
@@ -40,7 +42,17 @@
     if(!window._pages_ready && window.location.href.indexOf("simplAR") > -1) {
         wait().then(function () {
             addPages();
-            window._start();
+
+            const type = simplAR.paramValue("simplAR");
+            switch (type) {
+                case "ticker":
+                    window._startticker();
+                    break;
+
+                default:
+                    window._startcode();
+                    break;
+            }
         })
     }
 })()
