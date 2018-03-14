@@ -1,0 +1,18 @@
+<style>
+
+
+</style>
+
+<div class="slidecounter"></div>
+<div class="qrcode"></div>
+<div class="text"></div>
+
+<script>
+
+    /* global slidAR */
+
+    (function () {
+        const address = slidAR.qrUtil.qrCurrentAddress("#qrcode .qrcode", "master=1");
+        $("#qrcode .text").html(address);
+    })()
+</script>

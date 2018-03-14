@@ -23,7 +23,7 @@
     }
 
     function _wait(resolve) {
-        if(typeof window.simplAR === 'undefined' || typeof window._pages === 'undefined') {
+        if(typeof window.simplAR === 'undefined') {
             setTimeout(function () {
                 _wait(resolve);
             }, 100);

@@ -102,16 +102,22 @@ export const helix = (numberOfBodies, i, offset = 0) => {
     return helix;
 };
 
-export const ring = (numberOfBodies, i, offset = 0) => {
+export const ringInit = (radius) => {
+    return (numberOfBodies, i, offset) => {
+        return ring(numberOfBodies, i, offset, radius);
+    }
+}
+
+export const ring = (numberOfBodies, i, offset = 0, radius = 3000) => {
     const phaseWithOffset = addOffsetToPhaseFrom0To2(2 * i / numberOfBodies, offset);
 
     const ring = new THREE.Object3D();
     const vector = new THREE.Vector3();
     const phi = phaseWithOffset * Math.PI;
 
-    ring.position.x = 3000 * Math.sin(phi);
+    ring.position.x = radius * Math.sin(phi);
     ring.position.y = 100;
-    ring.position.z = 3000 * Math.cos(phi);
+    ring.position.z = radius * Math.cos(phi);
 
     vector.x = -ring.position.x * 2;
     vector.y = -ring.position.y;
@@ -153,7 +159,12 @@ export const getArPositionRotation = (type, i, num, positionFunction, offset) =>
 
 
         case TYPE_RING:
-            three3dObject = ring(num, i, offset);
+            if(_.isFunction(positionFunction)) {
+                three3dObject = positionFunction(num, i, offset);
+            }
+            else {
+                three3dObject = ring(num, i, offset);
+            }
             break;
 
 
