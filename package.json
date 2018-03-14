@@ -79,7 +79,7 @@
       "changeOrigin": true
     }
   },
-  "homepage": "http://46.101.199.174:1338/build/",
+  "homepage": "https://iterawidder.github.io/domAR/build",
   "jest": {
     "collectCoverageFrom": [
       "src/**/*.{js,jsx}"
