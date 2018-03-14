@@ -1,0 +1,38 @@
+<style>
+
+
+</style>
+
+<div class="slidecounter"></div>
+<div class="code"></div>
+
+<script>
+
+    /* global slidAR */
+
+    (function () {
+        slidAR.showCode.js("#codejs .code",
+            "switch(type) {\n" +
+            "    case \"ring\":\n" +
+            "        simplAR.ring();\n" +
+            "        break;\n" +
+            "\n" +
+            "    case \"helix\":\n" +
+            "        simplAR.helix();\n" +
+            "        break;\n" +
+            "\n" +
+            "    case \"sphere\":\n" +
+            "        simplAR.sphere();\n" +
+            "        break;\n" +
+            "\n" +
+            "    case \"random\":\n" +
+            "        simplAR.sphereRandom(100);\n" +
+            "        break;\n" +
+            "\n" +
+            "    default:\n" +
+            "        simplAR.table(3, 600, 200, 0, 500);\n" +
+            "        break;\n" +
+            "\n" +
+            "}\n");
+    })()
+</script>
