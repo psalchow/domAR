@@ -23,7 +23,7 @@
     }
 
     function _wait(resolve) {
-        if(typeof window.simplAR === 'undefined' || typeof window._pages === 'undefined') {
+        if(typeof window.simplAR === 'undefined') {
             setTimeout(function () {
                 _wait(resolve);
             }, 100);
@@ -41,6 +41,7 @@
 
     if(!window._pages_ready && window.location.href.indexOf("simplAR") > -1) {
         wait().then(function () {
+            window._pagesinit();
             addPages();
 
             const type = simplAR.paramValue("simplAR");

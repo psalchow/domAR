@@ -64,16 +64,22 @@ export const tableInit = (numberOfCols, _cellWidth, _cellHeight, _xOffset, _yOff
 
 export const table = tableInit(DEFAULT_NUMBER_PF_TABLE_COLUMNS);
 
-export const sphere = (numberOfBodies, i, offset = 0) => {
+export const sphereInit = (radius) => {
+    return (numberOfBodies, i, offset) => {
+        return sphere(numberOfBodies, i, offset, radius);
+    }
+}
+
+export const sphere = (numberOfBodies, i, offset = 0, radius = 800) => {
     const phaseWithOffset = addOffsetToPhaseFrom0To2(2 * i / numberOfBodies, offset);
 
     const phi = Math.acos(-1 + phaseWithOffset);
     const theta = Math.sqrt((numberOfBodies - 1) * Math.PI) * phi;
 
     const sphere = new THREE.Object3D();
-    sphere.position.x = 800 * Math.cos(theta) * Math.sin(phi);
-    sphere.position.y = 800 * Math.sin(theta) * Math.sin(phi);
-    sphere.position.z = 800 * Math.cos(phi);
+    sphere.position.x = radius * Math.cos(theta) * Math.sin(phi);
+    sphere.position.y = radius * Math.sin(theta) * Math.sin(phi);
+    sphere.position.z = radius * Math.cos(phi);
 
     const vector = new THREE.Vector3();
     vector.copy(sphere.position).multiplyScalar(-2);
@@ -102,16 +108,22 @@ export const helix = (numberOfBodies, i, offset = 0) => {
     return helix;
 };
 
-export const ring = (numberOfBodies, i, offset = 0) => {
+export const ringInit = (radius) => {
+    return (numberOfBodies, i, offset) => {
+        return ring(numberOfBodies, i, offset, radius);
+    }
+}
+
+export const ring = (numberOfBodies, i, offset = 0, radius = 3000) => {
     const phaseWithOffset = addOffsetToPhaseFrom0To2(2 * i / numberOfBodies, offset);
 
     const ring = new THREE.Object3D();
     const vector = new THREE.Vector3();
     const phi = phaseWithOffset * Math.PI;
 
-    ring.position.x = 3000 * Math.sin(phi);
+    ring.position.x = radius * Math.sin(phi);
     ring.position.y = 100;
-    ring.position.z = 3000 * Math.cos(phi);
+    ring.position.z = radius * Math.cos(phi);
 
     vector.x = -ring.position.x * 2;
     vector.y = -ring.position.y;
@@ -148,12 +160,22 @@ export const getArPositionRotation = (type, i, num, positionFunction, offset) =>
 
 
         case TYPE_SPHERE:
-            three3dObject = sphere(num, i, offset);
+            if(_.isFunction(positionFunction)) {
+                three3dObject = positionFunction(num, i, offset);
+            }
+            else {
+                three3dObject = sphere(num, i, offset);
+            }
             break;
 
 
         case TYPE_RING:
-            three3dObject = ring(num, i, offset);
+            if(_.isFunction(positionFunction)) {
+                three3dObject = positionFunction(num, i, offset);
+            }
+            else {
+                three3dObject = ring(num, i, offset);
+            }
             break;
 
 

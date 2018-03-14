@@ -10,6 +10,7 @@ import {demo} from './demo';
 import {positionRotation} from './positionRotation';
 import {slidarGlobal} from './slidarGlobal';
 import {math} from '../../util/mathUtil';
+import {qrUtil} from '../../util/qrutil';
 
 export const slidAR = {
     classUtil,
@@ -23,6 +24,7 @@ export const slidAR = {
     demo,
     positionRotation,
     slidarGlobal,
-    math
+    math,
+    qrUtil
 };
 

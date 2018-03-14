@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 
 import {log} from '../util/log';
-import {setArPositionRotation, TYPE_RING} from '../ar/arPositions';
+import {setArPositionRotation, TYPE_RING, ringInit} from '../ar/arPositions';
 import {init} from '../ar/argonApp';
 import {connect} from './control/commandHub';
 import {executeCommand, COMMAND_INIT} from './control/commandExecutor';
@@ -38,14 +38,23 @@ const addHudButtons = () => {
     hudUtil.addLeftRightButtons("#_hud", onLeftClick, onRightClick);
 }
 
+const createPositionFunction = (type, radius) => {
+    if(type == TYPE_RING && radius > 0) {
+        return ringInit(Number(radius));
+    }
+}
+
 export const initSlides = async (rootSelector, slideCreateFunction, param) => {
     key.init();
     connect();
 
     const selectedFilename = query.paramValue("slide");
     const nonar = query.paramValue("nonar");
-    const type = query.paramValue("type");
+    const type = query.paramValue("type") || TYPE_RING;
+    const radius = query.paramValue("radius");
     checkIfMaster();
+
+    const positionFunction = createPositionFunction(type, radius);
 
     if(_.isEmpty(selectedFilename) && _.isEmpty(nonar)) {
         slidarGlobal.withAr = true;
@@ -59,7 +68,7 @@ export const initSlides = async (rootSelector, slideCreateFunction, param) => {
         const selection = await slideCreateFunction(rootSelector);
         log.info("demo slides ready")
         selection.each(function (id, i) {
-            const object = setArPositionRotation(this, root, type || TYPE_RING, i, selection.size());
+            const object = setArPositionRotation(this, root, type, i, selection.size(), positionFunction);
             slideControl.addObject(id, object);
         });
 
