@@ -17,20 +17,17 @@ const customers = [
     {
         key: "PBSFF",
         company: "ProsiebenSat.1 Media SE"
+    },
+    {
+        key: "GOOGL",
+        company: "Alphabet Inc."
+    }
+    ,
+    {
+        key: "FB",
+        company: "Facebook, Inc."
     }
 ];
-
-function startServer() {
-    const httpPort = process.argv[3] || 1338;
-    const folder = process.argv[2] || 'build';
-
-    const app = express();
-    app.use('/', express.static(__dirname + '/' + folder));
-
-    http.createServer(app).listen(httpPort);
-
-    console.log(`serving folder '${folder}' on port: ${httpPort}`);
-}
 
 function fetchRemoteApi(url) {
     console.log("Fetching stock updates...")
@@ -94,7 +91,6 @@ function createStockDto(customer, index, jsonData) {
     }
 }
 
-
 async function loadStockData(customer, index) {
     return new Promise((resolve) => {
         fetchRemoteApi(getUrl(customer.key)).then((fetchedData) => {
@@ -123,7 +119,7 @@ function sendStockPrices() {
                 webSocketServer.sendObjectToAllSockets(stockData)
             })
         });
-    }, 1000 * 60);
+    }, 1000 * 60 * 5); // reload every 5 minutes
 }
 
 module.exports = {
