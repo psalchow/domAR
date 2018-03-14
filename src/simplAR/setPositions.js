@@ -2,7 +2,10 @@ import * as d3 from 'd3';
 import * as _ from 'lodash';
 
 import {getGlobalRoot, getTween} from './global';
-import {setArPositionRotation, getArPositionRotation, TYPE_HELIX, TYPE_RING, TYPE_SPHERE, TYPE_SPHERE_RANDOM, TYPE_TABLE, randomSphereInit, tableInit} from '../ar/arPositions';
+import {setArPositionRotation,
+    getArPositionRotation,
+    TYPE_HELIX, TYPE_RING, TYPE_SPHERE, TYPE_SPHERE_RANDOM, TYPE_TABLE,
+    randomSphereInit, tableInit, ringInit, sphereInit} from '../ar/arPositions';
 import {moveTo, fwd, moveOffset} from '../ar/arTransform';
 
 export const setPosition = (type, pageId, i, totalNum, positionFunction) => {
@@ -82,12 +85,20 @@ export const move = (offset) => {
     })
 }
 
-export const ring = () => {
-    setPositions(TYPE_RING, getIdArray());
+export const ring = (radius) => {
+    let positionFunction;
+    if(radius > 0) {
+        positionFunction = ringInit(radius);
+    }
+    setPositions(TYPE_RING, getIdArray(), positionFunction);
 }
 
-export const sphere = () => {
-    setPositions(TYPE_SPHERE, getIdArray());
+export const sphere = (radius) => {
+    let positionFunction;
+    if(radius > 0) {
+        positionFunction = sphereInit(radius);
+    }
+    setPositions(TYPE_SPHERE, getIdArray(), positionFunction);
 }
 
 export const helix = () => {

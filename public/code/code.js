@@ -6,9 +6,10 @@
         simplAR.initAr();
 
         const type = simplAR.firstParamSet(["ring", "table", "helix", "sphere", "random"]);
+        const radius = simplAR.paramValue("radius");
         switch(type) {
             case "ring":
-                simplAR.ring();
+                simplAR.ring(radius);
                 break;
 
             case "helix":
@@ -16,7 +17,7 @@
                 break;
 
             case "sphere":
-                simplAR.sphere();
+                simplAR.sphere(radius);
                 break;
 
             case "random":
