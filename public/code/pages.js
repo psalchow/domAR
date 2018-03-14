@@ -6,7 +6,6 @@
 
             // check for qr-code defined param
             const target = simplAR.paramValue("qrTarget");
-            console.log("got something: " + target);
 
             switch (target) {
                 case "logo":
@@ -29,7 +28,9 @@
                     window._pages = [
                         {id: "html1", name: "stocks/lufthansa.html"},
                         {id: "html2", name: "stocks/microsoft.html"},
-                        {id: "html3", name: "stocks/prosiebensat1.html"}
+                        {id: "html3", name: "stocks/prosiebensat1.html"},
+                        {id: "html4", name: "stocks/google.html"},
+                        {id: "html5", name: "stocks/facebook.html"}
                     ];
                     break;
                 default:
@@ -53,4 +54,5 @@
     }
 
     window._pagesinit = init;
+
 })()
