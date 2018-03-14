@@ -49,9 +49,12 @@ function startWebSocketServer() {
 }
 
 function fetchRemoteApi(url) {
+    console.log("Fetching stock updates...")
     return new Promise((resolve, reject) => {
         request(url, (error, response, body) => {
-            if (error) return reject(error);
+            if (error) {
+                return reject(error);
+            }
             resolve(body);
         });
     });
@@ -75,18 +78,15 @@ function createStockDto(customer, index, jsonData) {
             let key = obj;
             let val = currentValue[key];
 
-            switch (i) {
-                case 0:
-                    lastValues.push(val["2. high"]);
-                    i++;
-                    break;
-                case 1:
-                    lastValues.push(val["3. low"]);
-                    i++;
-                    break;
-                default:
-                    break;
+            if (i == 0) {
+                lastValues.push(val["2. high"]);
+            } else if (i == 1) {
+                lastValues.push(val["3. low"]);
+            } else {
+                break;
             }
+
+            i++;
         }
 
         const shift = parseFloat(lastValues[0]) - parseFloat(lastValues[1]);
@@ -111,42 +111,40 @@ function createStockDto(customer, index, jsonData) {
 }
 
 
-async function loadStockData() {
-    const stockPrices = [];
-
-    try {
-        customers.map(async (customer, index) => {
-            const result = await fetchRemoteApi(getUrl(customer.key));
-            const stockDto = createStockDto(customer, index, result);
-            stockPrices.push(stockDto);
+async function loadStockData(customer, index) {
+    return new Promise((resolve) => {
+        fetchRemoteApi(getUrl(customer.key)).then((fetchedData) => {
+            const jsonData = createStockDto(customer, index, fetchedData);
+            resolve(jsonData);
         })
-    } catch (error) {
-        console.error(error);
-    }
+    })
 
-    return stockPrices;
 }
 
-async function sendStockPrices() {
+function sendStockPrices() {
     // TODO: use an exisiting websocket instead of creating a new one (see code.js file)
     const webSocketPort = process.argv[4] || 1337;
     const webSocketServer = new WebSocketServer();
     webSocketServer.connect(webSocketPort);
 
-    let stockPrices = await loadStockData();
+    customers.map(async (customer, index) => {
+        loadStockData(customer, index).then((stockData) => {
+            webSocketServer.sendObjectToAllSockets(stockData)
+        })
+    });
 
-    // TODO enable auto updates
     setInterval(async () => {
-        // let stockPrices = await loadStockData();
-        if (!stockPrices.includes(null)) {
-            console.log("Sending ... ");
-            webSocketServer.sendObjectToAllSockets(stockPrices)
-        }
-    }, 1000 * 5);
+        customers.map(async (customer, index) => {
+            loadStockData(customer, index).then((stockData) => {
+                console.log(stockData);
+                webSocketServer.sendObjectToAllSockets(stockData)
+            })
+        });
+    }, 1000 * 60);
 }
 
 startServer();
-if(process.argv[5] == "ticker") {
+if (process.argv[5] == "ticker") {
     sendStockPrices();
 }
 else {

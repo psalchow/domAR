@@ -47,26 +47,24 @@
             const received = JSON.parse(messageString);
 
             try {
-            received.map((element) => {
-                const updated = element.updated;
-                const trend = element.trend;
-                const amount = element.value.amount + " " + element.value.currency;
+                const updated = received.updated;
+                const trend = received.trend;
+                const amount = received.value.amount + " " + received.value.currency;
 
-                document.getElementById("company-" + element.id).innerHTML = element.company;
-                document.getElementById("updated-" + element.id).innerHTML = updated;
-                document.getElementById("value-" + element.id).innerHTML = amount;
-                document.getElementById("shift-" + element.id).innerHTML = element.shift;
-                document.getElementById("shift-" + element.id).style.cssText = element.shift > 0 ? "color: green" : "color: red";
-                document.getElementById("trend-" + element.id).innerHTML = trend + " %";
-                document.getElementById("trend-" + element.id).style.cssText = element.trend > 0 ? "color: green" : "color: red";
-            })} catch(error) {
+                document.getElementById("company-" + received.id).innerHTML = received.company;
+                document.getElementById("updated-" + received.id).innerHTML = updated;
+                document.getElementById("value-" + received.id).innerHTML = amount;
+                document.getElementById("shift-" + received.id).innerHTML = received.shift;
+                document.getElementById("shift-" + received.id).style.cssText = received.shift > 0 ? "color: green" : "color: red";
+                document.getElementById("trend-" + received.id).innerHTML = trend + " %";
+                document.getElementById("trend-" + received.id).style.cssText = received.trend > 0 ? "color: green" : "color: red";
+            } catch
+                (error) {
                 console.log(error);
             }
         }
-
         simplAR.connect(onMessage);
     }
 
     window._startticker = init;
-
 })();
