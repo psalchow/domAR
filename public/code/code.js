@@ -33,9 +33,11 @@
 
         simplAR.initTween();
 
-        setInterval(function () {
-            simplAR.rotate();
-        }, interval)
+        if(interval > 0) {
+            setInterval(function () {
+                simplAR.rotate();
+            }, interval)
+        }
 
         receiveMessages();
     }
@@ -59,12 +61,29 @@
         divs.exit().remove();
     }
 
-    function sendPosition(pageId) {
+    function sendPosition(socket, pageId) {
         const position = simplAR.getPosition(pageId);
-        simplAR.send(JSON.stringify(position));
+        simplAR.send(socket, JSON.stringify(position));
+    }
+
+    function sendRotation(socket, pageId) {
+        const rotation = simplAR.getRotation(pageId);
+        simplAR.send(socket, JSON.stringify(rotation));
+    }
+
+    function setPosition(pageId, newPositionStr, duration) {
+        const newPosition = JSON.parse(newPositionStr);
+        simplAR.toPosition(pageId, newPosition, duration);
+    }
+
+    function setRotation(pageId, newRotationStr, duration) {
+        const newRotation = JSON.parse(newRotationStr);
+        simplAR.toRotation(pageId, newRotation, duration);
     }
 
     function receiveMessages() {
+        let socket;
+
         function onMessage(messageString) {
             var parts = messageString.split(";");
             if(parts.length > 1) {
@@ -74,13 +93,25 @@
                         break;
 
                     case "getpos":
-                        sendPosition(parts[1]);
+                        sendPosition(socket, parts[1]);
+                        break;
+
+                    case "getrot":
+                        sendRotation(socket, parts[1]);
+                        break;
+
+                    case "setpos":
+                        setPosition(parts[1], parts[2], parts[3]);
+                        break;
+
+                    case "setrot":
+                        setRotation(parts[1], parts[2], parts[3]);
                         break;
                 }
             }
         }
 
-        simplAR.connect(onMessage);
+        socket = simplAR.connect(onMessage);
     }
 
     window._startcode = init;
