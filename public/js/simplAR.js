@@ -41,6 +41,7 @@
 
     if(!window._pages_ready && window.location.href.indexOf("simplAR") > -1) {
         wait().then(function () {
+            window._pagesinit();
             addPages();
 
             const type = simplAR.paramValue("simplAR");
