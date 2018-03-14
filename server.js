@@ -10,11 +10,12 @@ function startServer() {
     const folder = process.argv[2] || 'build';
 
     const app = express();
-    app.use('/', express.static(__dirname + '/' + folder));
+    const absFolder = __dirname + '/' + folder;
+    app.use('/', express.static(absFolder));
 
     http.createServer(app).listen(httpPort);
 
-    console.log(`serving folder '${folder}' on port: ${httpPort}`);
+    console.log(`serving folder '${absFolder}' on port: ${httpPort}`);
 
     commandServer.startNew(wsPort);
 }
