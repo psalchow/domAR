@@ -5,7 +5,7 @@ import * as fct from '../util/fct';
 import {appendScriptsWithReadyFunction} from '../util/loadScript';
 import {slideControl} from './control/SlideControl';
 import {appendStyles} from "../util/loadStyles";
-import {loadHtmlWithSelector, loadHtml} from '../util/loadHtml';
+import {loadHtml} from '../util/loadHtml';
 
 const clearHtml = (slideId) => {
     $("#" + slideId).empty();

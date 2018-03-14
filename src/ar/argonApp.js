@@ -1,5 +1,6 @@
 import {Argon} from './argonHelper';
 import {THREE} from './threeHelper';
+import * as hudUtil from './hudUtil';
 
 export const init = () => {
     const app = Argon.init();
@@ -30,6 +31,8 @@ export const init = () => {
             renderFunc(app, viewport, subViews, hud, camera, renderer, scene);
         });
     });
+
+    hudUtil.init("#_hud", hud);
 
     return {root, app};
 }

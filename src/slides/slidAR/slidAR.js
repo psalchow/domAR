@@ -7,6 +7,9 @@ import {createElement} from './createElement';
 import {cube} from './cube';
 import {canvas} from './canvas';
 import {demo} from './demo';
+import {positionRotation} from './positionRotation';
+import {slidarGlobal} from './slidarGlobal';
+import {math} from '../../util/mathUtil';
 
 export const slidAR = {
     classUtil,
@@ -17,6 +20,9 @@ export const slidAR = {
     createElement,
     cube,
     canvas,
-    demo
+    demo,
+    positionRotation,
+    slidarGlobal,
+    math
 };
 

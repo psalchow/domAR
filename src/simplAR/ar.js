@@ -2,9 +2,11 @@ import * as _ from 'lodash';
 
 import {init} from '../ar/argonApp';
 import * as global from './global';
-import {ring, sphere, helix, sphereRandom, table, rotate} from './setPositions';
+import * as setPositions from './setPositions';
+import * as moveObject from './moveObject';
 
-const TWEEN = require('@tweenjs/tween.js');
+const TWEEN = window.TWEEN;
+
 
 export const initAr = () => {
     if(_.isEmpty(global.getGlobalRoot()) || _.isEmpty(global.getGlobalApp())) {
@@ -25,5 +27,6 @@ export const initTween = () => {
 export const ar = {
     initAr,
     initTween,
-    ring, sphere, helix, sphereRandom, table, rotate
+    ...setPositions,
+    ...moveObject
 }

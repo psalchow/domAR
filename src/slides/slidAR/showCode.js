@@ -52,6 +52,7 @@ export const jsStepWithReverse = (selector, jsString) => {
 
 export const showCode = {
     css,
+    js,
     remove,
     cssStep,
     cssStepWithReverse,

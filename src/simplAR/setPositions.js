@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 
 import {getGlobalRoot, getTween} from './global';
 import {setArPositionRotation, getArPositionRotation, TYPE_HELIX, TYPE_RING, TYPE_SPHERE, TYPE_SPHERE_RANDOM, TYPE_TABLE, randomSphereInit, tableInit} from '../ar/arPositions';
-import {moveTo, next} from '../ar/arTransform';
+import {moveTo, fwd, moveOffset} from '../ar/arTransform';
 
 export const setPosition = (type, pageId, i, totalNum, positionFunction) => {
     d3.selectAll("#" + pageId)
@@ -21,10 +21,31 @@ export const moveToPosition = (type, pageId, i, totalNum, positionFunction) => {
         })
 }
 
+export const moveToAbsolutePosition = (pageId, newPosition) => {
+    d3.selectAll("#" + pageId)
+        .each(function(d) {
+            moveTo(d.object, newPosition, d.object.rotation, getTween());
+        })
+}
+
+export const moveToAbsoluteRotation = (pageId, newRotation) => {
+    d3.selectAll("#" + pageId)
+        .each(function(d) {
+            moveTo(d.object, d.object.position, newRotation, getTween());
+        })
+}
+
 const nextPosition = (pageId) => {
     d3.selectAll("#" + pageId)
         .each(function(d) {
-            next(d.object, getTween());
+            fwd(d.object, getTween());
+        })
+}
+
+const movePositionOffset = (pageId, offset) => {
+    d3.selectAll("#" + pageId)
+        .each(function(d) {
+            moveOffset(d.object, getTween(), offset);
         })
 }
 
@@ -51,6 +72,13 @@ export const rotate = () => {
     const pageIds = getIdArray();
     pageIds.forEach((pageId) => {
         nextPosition(pageId);
+    })
+}
+
+export const move = (offset) => {
+    const pageIds = getIdArray();
+    pageIds.forEach((pageId) => {
+        movePositionOffset(pageId, offset);
     })
 }
 

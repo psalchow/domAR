@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "license": "MIT",
   "dependencies": {
-    "@tweenjs/tween.js": "^17.2.0",
     "animejs": "^2.2.0",
     "autoprefixer": "7.1.2",
     "babel-core": "6.25.0",
@@ -37,6 +36,8 @@
     "lodash": "^4.17.4",
     "loglevel": "^1.6.1",
     "materialize-css": "^0.100.2",
+    "moment": "^2.21.0",
+    "node-fetch": "^2.1.1",
     "object-assign": "4.1.1",
     "opentype.js": "^0.7.3",
     "postcss-flexbugs-fixes": "3.2.0",
@@ -64,6 +65,7 @@
     "script-loader": "^0.7.2"
   },
   "scripts": {
+    "server": "node server.js ../",
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom"

@@ -3,12 +3,15 @@ import * as _ from 'lodash';
 import {log} from '../../util/log';
 import * as query from '../../util/query';
 
+import {slidarGlobal} from '../slidAR/slidarGlobal';
 import {execute} from './commandExecutor';
+
+import * as webSocketHub from '../../websocket/webSocketHub';
 
 const WS_HOST_PARAM = "wsHost";
 
 const host = window.location.hostname;
-const port = 1337;
+const port = 2337;
 
 export class CommandHub {
     constructor() {
@@ -27,5 +30,16 @@ export class CommandHub {
             log.info(commandStr);
             execute(commandStr);
         }
+
+        slidarGlobal.socket = this.socket;
     }
+}
+
+export const connect = () => {
+    const socket = webSocketHub.connect(2337, (commandStr) => {
+        log.info(commandStr);
+        execute(commandStr);
+    });
+
+    slidarGlobal.socket = socket;
 }

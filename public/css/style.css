@@ -7,3 +7,29 @@
     color: white;
     opacity: .5;
 }
+
+#_hud .menu {
+    position: absolute;
+    bottom: 50px;
+    margin: 0 auto;
+    text-align: center;
+    width: 100%;
+}
+
+#_hud button {
+    color: blue;
+    background: transparent;
+    border-color: blue;
+}
+
+#_hud button:hover {
+    background-color: lightgray;
+}
+
+.activeslide::before {
+    content: "♥";
+}
+.activeslide:after {
+    border-color: lightgrey;
+    border-style: dotted;
+}

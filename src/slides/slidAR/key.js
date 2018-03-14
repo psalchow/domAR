@@ -1,6 +1,5 @@
 import {Keyboard} from 'keyboardjs';
 
-import {slideControl} from '../control/SlideControl';
 import {executeCommand, COMMAND_BACK, COMMAND_FWD, COMMAND_NEXT, COMMAND_PREV, COMMAND_LAST, COMMAND_FIRST} from '../control/commandExecutor';
 
 const usLocale = require('keyboardjs/locales/us');
@@ -13,7 +12,15 @@ export const init = () => {
         executeCommand(COMMAND_FWD);
     })
 
+    keyboard.bind('s', () => {
+        executeCommand(COMMAND_FWD);
+    })
+
     keyboard.bind('left', () => {
+        executeCommand(COMMAND_BACK)
+    })
+
+    keyboard.bind('a', () => {
         executeCommand(COMMAND_BACK)
     })
 
@@ -21,7 +28,15 @@ export const init = () => {
         executeCommand(COMMAND_NEXT)
     })
 
+    keyboard.bind('w', () => {
+        executeCommand(COMMAND_NEXT)
+    })
+
     keyboard.bind('down', () => {
+        executeCommand(COMMAND_PREV)
+    })
+
+    keyboard.bind('y', () => {
         executeCommand(COMMAND_PREV)
     })
 

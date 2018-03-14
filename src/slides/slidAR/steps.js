@@ -1,30 +1,6 @@
-import * as _ from 'lodash';
-
 import {slideControl} from '../control/SlideControl';
 import {paramValue} from '../../util/query';
 import {demo} from './demo';
-
-const _waitForSteps = (stepNum, resolve) => {
-    const currentStepsObject = slideControl.getCurrentStepsObject();
-    if(!_.isUndefined(currentStepsObject)) {
-        const currentSteps = currentStepsObject.steps;
-        if(!_.isUndefined(currentSteps)) {
-            const numberOfCurrentSteps = currentSteps.length;
-            if(numberOfCurrentSteps > stepNum) {
-                resolve();
-            }
-        }
-    }
-
-    setTimeout(() => _waitForSteps(stepNum, resolve), 100);
-}
-
-const _step = (numberOfSteps) => {
-    if(numberOfSteps > 0) {
-        slideControl.forwardStep();
-        setTimeout(() => _step(numberOfSteps-1), 100);
-    }
-}
 
 export const createReverseStep = (step) => {
     const reverseStep = {f: step.b, b: step.f}
@@ -34,9 +10,7 @@ export const createReverseStep = (step) => {
 export const init = () => {
     const stepNum = paramValue("step");
     if(stepNum > 0) {
-        new Promise((resolve) => _waitForSteps(stepNum, resolve)).then(() => {
-            _step(stepNum);
-        })
+        slideControl.gotoStepOnCurrentSlide(stepNum);
     }
 }
 
@@ -95,7 +69,7 @@ export const combine2StepsDelayed = (step1, step2, delay) => {
 
 export const steps = {
     set,
-    createReverseStep,
     combineSteps,
-    combine2StepsDelayed
+    combine2StepsDelayed,
+    createReverseStep
 }

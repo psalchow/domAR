@@ -5,6 +5,7 @@ export class ObjectData {
         this.type = type;
         this.totalNum = totalNum;
         this.positionFunction = positionFunction;
+        this.offset = 0;
     }
 
     getType() {
@@ -38,5 +39,17 @@ export class ObjectData {
 
     getPositionFunction() {
         return this.positionFunction;
+    }
+
+    getOffset() {
+        return this.offset;
+    }
+
+    setOffset(offset) {
+        this.offset = offset;
+    }
+
+    addToOffset(offset) {
+        this.offset += offset;
     }
 }

@@ -1,3 +1,6 @@
 export const slidarGlobal = {
-    withAr: undefined
+    withAr: undefined,
+    isMaster: undefined,
+    socket: undefined,
+    TWEEN: undefined
 }

@@ -1,5 +1,6 @@
 import * as _ from 'lodash';
 import * as $ from 'jquery';
+import * as d3 from 'd3';
 
 import {log} from '../../util/log';
 import * as fct from '../../util/fct';
@@ -8,6 +9,7 @@ import * as nonArSlides from '../nonArSlides';
 
 import * as arTransform from '../../ar/arTransform';
 
+/* eslint eqeqeq: "off" */
 class SlideControl {
 
     constructor(withAr) {
@@ -18,6 +20,30 @@ class SlideControl {
 
     setTWEEN(TWEEN) {
         this.TWEEN = TWEEN;
+        slidarGlobal.TWEEN = TWEEN;
+    }
+
+    getNumberOfSlides() {
+        return this.slideIds.length;
+    }
+
+    getSlideIds() {
+        return this.slideIds;
+    }
+
+    _waitForAllSteps = (resolve) => {
+        if(this.getNumberOfSteps() < this.getNumberOfSlides()) {
+            setTimeout(() => this._waitForAllSteps(resolve), 100);
+        }
+        else {
+            setTimeout(() => resolve(), 100);
+        }
+    }
+
+    waitForAllSteps() {
+        return new Promise((resolve) => {
+            this._waitForAllSteps(resolve);
+        })
     }
 
     registerConfig(slideId, config) {
@@ -40,6 +66,13 @@ class SlideControl {
         const config = this.configs[slideId];
         if(_.isObject(config)) {
             config.object = object;
+        }
+    }
+
+    getObject(slideId) {
+        const config = this.configs[slideId];
+        if(_.isObject(config)) {
+            return config.object;
         }
     }
 
@@ -97,102 +130,210 @@ class SlideControl {
         }
     }
 
-    fwdSlide() {
+    gotoSlide(slideId) {
+        if(slideId != this.currentSlideId) {
+            this.setCurrentSlideId(slideId);
+            if(!slidarGlobal.withAr) {
+                nonArSlides.nextSlide(slideId);
+            }
+        }
+    }
+
+    fwdSlide(sendStatusFunction) {
         if(slidarGlobal.withAr) {
             const allObjects = this.getAllObjects();
             arTransform.allFwd(allObjects, this.TWEEN);
             this.shiftForwardCurrentSlideId();
+            fct.call(sendStatusFunction);
         }
         else {
             this.shiftForwardCurrentSlideId();
-            nonArSlides.nextSlide(this.currentSlideId);
+            fct.callWithPromise(sendStatusFunction).then(() => {
+                nonArSlides.nextSlide(this.currentSlideId);
+            });
         }
     }
 
-    backSlide() {
+    moveOffsetOnAllSlides(offset) {
+        const allObjects = this.getAllObjects();
+        arTransform.allMoveOffset(allObjects, this.TWEEN, offset);
+    }
+
+    moveToAbsolutePosition(slideId, position) {
+        const object = this.getObject(slideId);
+        if(_.isObject(object)) {
+            arTransform.moveTo(object, position, object.rotation, this.TWEEN);
+        }
+    }
+
+    moveToAbsoluteRotation(slideId, rotation) {
+        const object = this.getObject(slideId);
+        if(_.isObject(object)) {
+            arTransform.moveTo(object, object.position, rotation, this.TWEEN);
+        }
+    }
+
+    moveToAbsolutePositionRotation(slideId, position, rotation) {
+        const object = this.getObject(slideId);
+        if(_.isObject(object)) {
+            arTransform.moveTo(object, position, rotation, this.TWEEN);
+        }
+    }
+
+    backSlide(sendStatusFunction) {
         if(slidarGlobal.withAr) {
             const allObjects = this.getAllObjects();
             arTransform.allBack(allObjects, this.TWEEN);
             this.shiftBackwardCurrentSlideId();
+            fct.call(sendStatusFunction);
         }
         else {
             this.shiftBackwardCurrentSlideId();
-            nonArSlides.nextSlide(this.currentSlideId);
+            fct.callWithPromise(sendStatusFunction).then(() => {
+                nonArSlides.nextSlide(this.currentSlideId);
+            })
         }
     }
 
+    unactive() {
+        d3.selectAll("#" + this.currentSlideId)
+            .classed("activeslide", false)
+    }
+
+    active() {
+        d3.selectAll("#" + this.currentSlideId)
+            .classed("activeslide", true)
+    }
+
     setCurrentSlideId(slideId) {
+        this.unactive();
         this.currentSlideId = slideId;
+        this.active();
     }
 
     addSlideId(slideId) {
         this.slideIds.push(slideId);
+        this.steps[slideId] = {stepNumber: 0};
     }
 
     shiftForwardCurrentSlideId() {
         const currentIndex = this.slideIds.indexOf(this.currentSlideId);
         const nextIndex = currentIndex >= this.slideIds.length - 1 ? 0 : currentIndex+1;
-        this.currentSlideId = this.slideIds[nextIndex];
+        this.setCurrentSlideId(this.slideIds[nextIndex]);
     }
 
     shiftBackwardCurrentSlideId() {
         const currentIndex = this.slideIds.indexOf(this.currentSlideId);
         const nextIndex = currentIndex <= 0 ? this.slideIds.length - 1 : currentIndex-1;
-        this.currentSlideId = this.slideIds[nextIndex];
+        this.setCurrentSlideId(this.slideIds[nextIndex]);
     }
 
-    setStepsObject(slideId, steps, currentStepNumber = 0) {
-        this.steps[slideId] = {steps, currentStepNumber};
+    setStepsObject(slideId, steps, stepNumber = 0) {
+        this.steps[slideId] = {steps, stepNumber};
     }
 
     getStepsObject = (slideId) => {
         return this.steps[slideId];
     }
 
-    setCurrentStepsObject(steps, currentStepNumber = 0) {
-        this.setStepsObject(this.currentSlideId, steps, currentStepNumber);
+    getNumberOfSteps() {
+        return this.steps.length;
+    }
+
+    setCurrentStepsObject(steps, stepNumber = 0) {
+        this.setStepsObject(this.currentSlideId, steps, stepNumber);
     }
 
     getCurrentStepsObject() {
         return this.getStepsObject(this.currentSlideId);
     }
 
-    renderStepNumber() {
-        const renderCounterElement = $("#" + this.currentSlideId + " .slidecounter");
+    getCurrentSlideId() {
+        return this.currentSlideId;
+    }
+
+    renderStepNumberForSlideId(slideId) {
+        const renderCounterElement = $("#" + slideId + " .slidecounter");
         if(!_.isEmpty(renderCounterElement)) {
-            const {steps, currentStepNumber} = this.getCurrentStepsObject();
-            renderCounterElement.html(currentStepNumber + " / " + steps.length);
+            const {steps, stepNumber} = this.getStepsObject(slideId);
+            renderCounterElement.html(stepNumber + " / " + steps.length);
         }
     }
 
+    renderStepNumber() {
+        this.renderStepNumberForSlideId(this.currentSlideId);
+    }
+
+    incStepNumber(slideId) {
+        const {steps, stepNumber} = this.getStepsObject(slideId);
+        const newStepNumber = stepNumber+1;
+        this.setStepsObject(slideId, steps, newStepNumber);
+        this.renderStepNumberForSlideId(slideId);
+
+        return newStepNumber;
+    }
+
     incCurrentStepNumber() {
-        const {steps, currentStepNumber} = this.getCurrentStepsObject();
-        const newStepNumber = currentStepNumber+1;
-        this.setCurrentStepsObject(steps, currentStepNumber+1);
-        this.renderStepNumber();
+        return this.incStepNumber(this.currentSlideId);
+    }
+
+    decStepNumber(slideId) {
+        const {steps, stepNumber} = this.getStepsObject(slideId);
+        const newStepNumber = stepNumber-1;
+        this.setStepsObject(slideId, steps, newStepNumber);
+        this.renderStepNumberForSlideId(slideId);
 
         return newStepNumber;
     }
 
     decCurrentStepNumber() {
-        const {steps, currentStepNumber} = this.getCurrentStepsObject();
-        const newStepNumber = currentStepNumber-1;
-        this.setCurrentStepsObject(steps, newStepNumber);
-        this.renderStepNumber();
-
-        return newStepNumber;
+        return this.decStepNumber(this.currentSlideId);
     }
 
-    forwardStep() {
-        const {steps, currentStepNumber} = this.getCurrentStepsObject();
+    _gotoStep(slideId, toStepNumber, resolve) {
+        const fromStepNumber = this.getStepsObject(slideId).stepNumber;
+        if(fromStepNumber == toStepNumber) {
+            resolve();
+        }
+        else {
+            if(toStepNumber > fromStepNumber) {
+                for(let i = 0; i < toStepNumber - fromStepNumber; i++) {
+                    this.forwardStepOnSlideId(slideId);
+                }
+            }
+            else {
+                for(let i = 0; i < fromStepNumber - toStepNumber; i++) {
+                    this.backwardStepOnSlideId(slideId);
+                }
+            }
+        }
+    }
+
+    async gotoStep(slideId, toStepNumber) {
+        await this.waitForAllSteps();
+        return new Promise((resolve) => {
+            this._gotoStep(slideId, toStepNumber, resolve);
+        })
+    }
+
+    gotoStepOnCurrentSlide(toStepNumber) {
+        return this.gotoStep(this.currentSlideId, toStepNumber);
+    }
+
+    forwardStepOnSlideId(slideId) {
+        const {steps, stepNumber} = this.getStepsObject(slideId);
         if(_.isEmpty(steps)) {
             return
         }
-        if(currentStepNumber < steps.length) {
-            const step = steps[currentStepNumber];
+        if(stepNumber < steps.length) {
+            const step = steps[stepNumber];
             fct.call(step.f);
-            this.incCurrentStepNumber();
+            this.incStepNumber(slideId);
         }
+    }
+
+    forwardStep() {
+        this.forwardStepOnSlideId(this.currentSlideId);
     }
 
     _stepFwd(numberOfSteps) {
@@ -209,25 +350,32 @@ class SlideControl {
         }
     }
 
-    gotoLastStep() {
-        const {steps, currentStepNumber} = this.getCurrentStepsObject();
+    async gotoLastStep() {
+        await this.waitForAllSteps();
+        const {steps} = this.getCurrentStepsObject();
         if(_.isEmpty(steps)) {
             return
         }
-        this._stepFwd(steps.length - currentStepNumber);
+        return this.gotoStepOnCurrentSlide(steps.length-1);
     }
 
     gotoFirstStep() {
-        const {steps, currentStepNumber} = this.getCurrentStepsObject();
-        if(_.isEmpty(steps) || !(currentStepNumber > 0)) {
+        return this.gotoStepOnCurrentSlide(0);
+    }
+
+    backwardStepOnSlideId(slideId) {
+        const {steps, stepNumber} = this.getStepsObject(slideId);
+        if(_.isEmpty(steps) || !(stepNumber > 0)) {
             return
         }
-        this._stepBack(currentStepNumber);
+        const newstepNumber = this.decStepNumber(slideId);
+        const step = steps[newstepNumber];
+        fct.call(step.b);
     }
 
     backwardStep() {
-        const {steps, currentStepNumber} = this.getCurrentStepsObject();
-        if(_.isEmpty(steps) || !(currentStepNumber > 0)) {
+        const {steps, stepNumber} = this.getCurrentStepsObject();
+        if(_.isEmpty(steps) || !(stepNumber > 0)) {
             return
         }
         const newstepNumber = this.decCurrentStepNumber();

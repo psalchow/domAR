@@ -6,7 +6,7 @@ function parse(command) {
 
     return {
         command: parts.length > 0 ?  parts[0] : "",
-        slideId: parts.length > 1 ?  parts[1] : ""
+        argument: parts.length > 1 ?  parts[1] : ""
     }
 }
 
