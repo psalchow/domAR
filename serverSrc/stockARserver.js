@@ -1,6 +1,4 @@
 const moment = require("moment");
-const express = require('express');
-const http = require('http');
 const request = require("request");
 
 const {WebSocketServer} = require('./WebSocketServer');
@@ -21,11 +19,26 @@ const customers = [
     {
         key: "GOOGL",
         company: "Alphabet Inc."
-    }
-    ,
+    },
     {
         key: "FB",
         company: "Facebook, Inc."
+    },
+    {
+        key: "BAMXF",
+        company: "BMW AG"
+    },
+    {
+        key: "DDAIF",
+        company: "Daimler AG"
+    },
+    {
+        key: "ADDDF",
+        company: "Adidas AG"
+    },
+    {
+        key: "DB",
+        company: "Deutsche Bahn AG"
     }
 ];
 

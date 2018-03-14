@@ -30,7 +30,11 @@
                         {id: "html2", name: "stocks/microsoft.html"},
                         {id: "html3", name: "stocks/prosiebensat1.html"},
                         {id: "html4", name: "stocks/google.html"},
-                        {id: "html5", name: "stocks/facebook.html"}
+                        {id: "html5", name: "stocks/facebook.html"},
+                        {id: "html6", name: "stocks/adidas.html"},
+                        {id: "html7", name: "stocks/bmw.html"},
+                        {id: "html8", name: "stocks/daimler.html"},
+                        {id: "html9", name: "stocks/bahn.html"}
                     ];
                     break;
                 default:
