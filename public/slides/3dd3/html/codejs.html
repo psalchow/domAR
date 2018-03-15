@@ -12,27 +12,16 @@
 
     (function () {
         slidAR.showCode.js("#codejs .code",
-            "switch(type) {\n" +
-            "    case \"ring\":\n" +
-            "        simplAR.ring();\n" +
-            "        break;\n" +
-            "\n" +
-            "    case \"helix\":\n" +
-            "        simplAR.helix();\n" +
-            "        break;\n" +
-            "\n" +
-            "    case \"sphere\":\n" +
-            "        simplAR.sphere();\n" +
-            "        break;\n" +
-            "\n" +
-            "    case \"random\":\n" +
-            "        simplAR.sphereRandom(100);\n" +
-            "        break;\n" +
-            "\n" +
-            "    default:\n" +
-            "        simplAR.table(3, 600, 200, 0, 500);\n" +
-            "        break;\n" +
-            "\n" +
-            "}\n");
+            "simplAR.initAr();\n" +
+            "simplAR.initTween();\n" +
+            "const radius = simplAR.paramValue(\"radius\");\n" +
+            "simplAR.ring(radius);\n" +
+            "simplAR.sphere(radius);\n" +
+            "simplAR.table(numberOfColumns, cellWidth, cellHeight, xOffset, yOffset, zOffset);\n" +
+            "simplAR.rotate();\n" +
+            "const socket = simplAR.connect(function(messageString) {...});\n" +
+            "simplAR.send(socket, messageString);\n" +
+            "simplAR.toPosition(pageId, newPosition, duration);\n" +
+            "simplAR.toRotation(pageId, newRotation, duration);\n");
     })()
 </script>
