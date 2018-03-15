@@ -26,3 +26,33 @@
     75% { transform: rotateX(-190deg) rotateY(200deg) rotateZ(-100deg); }
 }
 
+.header {
+    width: 400px;
+    height: 200px;
+    background: linear-gradient(to bottom left, lightgray, white);
+    border-bottom: lightgray 2px solid;
+}
+
+svg {
+    margin: 25px;
+}
+
+.eye {
+    animation: squeeze infinite 3s;
+}
+
+@keyframes squeeze {
+    90% {
+        transform: none;
+        animation-timing-function: ease-in;
+    }
+    93% {
+        transform: translateY(10px) scaleY(0.1)
+    }
+    100% {
+        animation-timing-function: ease-out;
+    }
+}
+
+
+
